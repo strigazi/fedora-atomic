@@ -18,6 +18,9 @@
                 templateUrl: 'partials/build-status.html',
                 controller: 'fatomicHomeCtrl'
             }).
+            when('/development', {
+                templateUrl: 'partials/development.html'
+            }).
             when('/implementation', {
                 templateUrl: 'partials/implementation.html'
             }).
