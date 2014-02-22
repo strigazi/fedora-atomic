@@ -26,66 +26,18 @@
       <div class="collapse navbar-collapse">
         <ul class="nav navbar-nav">
           <li class="active"><a href="#">Home</a></li>
-          <li><a href="#buildstatus">Build Status</a></li>
+          <li><a href="#build-status">Build Status</a></li>
           <li><a href="#development">Development</a></li>
         </ul>
       </div><!--/.nav-collapse -->
     </div>
   </div>
   
-  <div class="jumbotron">
-    <div class="container">
-      <p>
-	The Fedora Atomic Initative is a new basis for operating system
-	development and deployment, using a combination
-	of <a href="http://live.gnome.org/Projects/OSTree">OSTree</a>,
-	the
-	venerable <a href="http://en.wikipedia.org/wiki/RPM_Package_Manager">RPM</a>,
-	and the Fedora package set.
-	With <a href="https://github.com/cgwalters/rpm-ostree">rpm-ostree</a>,
-	multiple RPM package configurations can be assembled into an
-	OSTree repository on a build server, tested, and replicated to
-	client machines.  Clients using OSTree have <i>fully atomic</i>
-	upgrades.
-      </p>
-      <p>You can use rpm-ostree inside your organization's firewall to
-	reliably deploy custom operating systems to a plain bare metal
-	server farm, mobile laptops, or virtual cloud deployments, and
-	have them efficiently upgrade while preserving state.
-      </p>
-    <p><a class="btn btn-primary btn-lg" role="button">Learn more &raquo;</a></p>
-    </div>
-  </div>
-  
-  <div class="container">
-   <div class="row">
-     <div class="col-md-4">
-       <h2>Installation</h2>
-       <p>
-	 Pre-provisioned virtual machines ready for use with QEMU/KVM
-	 are generated many times a day.  You also have the option to
-	 install one of these trees <i>inside your existing
-	 filesystem</i>, completely non-destructively.</p>
-       <p><a class="btn btn-default" href="installation" role="button">Install</a></p>
-     </div>
-     <div class="col-md-4">
-       <h2>Running your own repository</h2>
-       <p>
-	 All the tools here
-	 are <a href="https://www.gnu.org/philosophy/free-sw.html">Free
-	 Software</a> - you are not limited to merely consuming
-	 pre-constructed trees or packages.  You can use rpm-ostree to
-	 make your own custom trees derived from the Fedora package
-	 set, or include your own custom packages to create
-	 a <a href="https://fedoraproject.org/wiki/Remix">Remix</a>.</p>
-       <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-     </div>
-   </div>
-   <hr>
-   <footer>
-     This site is maintained in the <a href="https://github.com/cgwalters/rpm-ostree">rpm-ostree</a> git module.
-   </footer>
-  </div>
+  <div ng-view class="content"></div>
+  <hr>
+  <footer>
+    This site is maintained in the <a href="https://github.com/cgwalters/rpm-ostree">rpm-ostree</a> git module.
+  </footer>
   <script src="js/bootstrap.min.js"></script>
 </body>
 </html>

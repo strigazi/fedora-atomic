@@ -1,0 +1,17 @@
+<article>
+  <div class="starter-template">
+    <h3>Current build status</h3>
+    <p>The contents of these trees is defined by
+      the <a href="https://github.com/cgwalters/fatomic/blob/master/fedostree/products.json">products.json</a>
+      file.</p>
+    <div ng-repeat="(ref, treedata) in trees">
+      <div>
+	<div>Name: {{ ref }}</div>
+	<div>Description: {{ treedata.comment }}</div>
+	<div>Packages: {{ treedata.packages }}</div>
+	<div>VM Image: <a href="images/auto/{{ treedata.refUnix }}">Download</a></div>
+	<div><a href="{{ treedata.screenshotUrl }}"><img src="{{ treedata.screenshotUrl }}" width="160" height="120"></img></div>
+      </div>
+    </div>
+  </div>
+</article>

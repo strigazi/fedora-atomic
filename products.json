@@ -29,14 +29,20 @@
 
     "products":
     {
+	"base":
+	{
+	    "core": { "comment": "Just the @core group",
+		      "packages": ["@core"]
+		    }
+	},
 	"server":
 	{
 	    "docker-io": { "comment": "A system to just run Docker",
-			   "packages": ["@core", "@standard", "NetworkManager-config-server", "docker-io"],
+			   "packages": ["@core", "@standard", "docker-io"],
 			   "units": ["docker.service"]
 			 },
 	    "virthost": { "comment": "A system to just run libvirt",
-			  "packages": ["@core", "@standard", "NetworkManager-config-server",
+			  "packages": ["@core", "@standard",
 				       "libvirt-daemon-kvm",
 				       "libvirt-daemon-config-network",
 				       "qemu-kvm",
