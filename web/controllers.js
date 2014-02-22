@@ -8,6 +8,8 @@
     fatomicControllers.controller('fatomicHomeCtrl', function($scope, $http) {
         var builds = [];
 
+	console.log("Initializing");
+
         $http.get(ROOT + 'autobuilder-status.json').success(function(status) {
             var text;
             if (status.running.length > 0)

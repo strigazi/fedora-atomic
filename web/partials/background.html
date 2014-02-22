@@ -1,15 +1,17 @@
 <article>
   <div class="container">
     <div class="starter-template">
-      <h3>Packages and Images</h3>
+      <div>
+      <h3>Packages, Images, and Trees</h3>
       <p>
 	Traditional GNU/Linux distributions come as a collection of
-	packages, which one can assemble into a wide variety of
-	potential trees, accomodating a potentially vast array of use
-	cases.  A weakness of this model is that there are many system
-	configurations which go untested, or only have limited
-	testing.  It's very easy for upgraded systems to diverge from
-	fresh installations.
+	packages, which one can assemble in many ways.  They typically
+	target a variety of hardware, offer choices of things like
+	filesystems.  A weakness of this model is that there are many
+	system configurations which go untested, or nearly so.  It's
+	very easy for upgraded systems to diverge from fresh
+	installations, due to the way package managers upgrade
+	piecemeal.
       </p>
       <p>
 	At the other end of the spectrum, systems
@@ -18,27 +20,43 @@
 	and target fixed use cases.  Their update systems reflect this
 	targeting - they're not designed to allow much flexibility on
 	the client side.</p>
-      <h3>OSTree as a middle ground</h3>
       <p>
-	With traditional package systems, while one may use an
-	"image" as a basis for install, once installed, the system
-	requires package management on the client.  Each client
-	machine performs dependency resolution and updates package by
-	package.
-      </p>
-      <p>
-	OSTree encourages assembling <i>multiple</i> trees from a
-	variety of packages on a build server, <i>naming</i> the
-	resulting filesystem trees that are the combination of
-	packages, and then <i>replicating</i> that to clients.
-      </p>
-      <p>
-	However, unlike traditional image-based upgrades, client
+	OSTree allows a middle ground - one can
+	assemble <i>multiple</i> trees from a variety of packages on a
+	build server, <i>naming</i> the resulting filesystem trees
+	that are the combination of packages, and then clients can
+	reliablly <i>replicate</i> and upgrade.  Furthermore, client
 	systems can <i>switch</i> between these pre-assembled trees.
-	For example, one can start with a minimal "core" system, and
-	then atomically upgrade to a larger system, perhaps with local
-	documentation, tracing and profiling tools, etc.
       </p>
+      <h3>Short Term Goal - Testing Rawhide</h3>
+      <p>
+	 The Atomic Initiative will track Fedora Rawhide, assembling
+	 packages into filesystem trees, and offering them for atomic
+	 replication by both human and machine consumers.
+      </p>
+      <p>
+	Why machine consumers?  The very same rpm-ostree codebase
+	actually
+	contains <a href="http://wiki.qemu.org/KVM">qemu-kvm</a> based
+	testing infrastructure.  It's designed to rapidly <i>boot</i>
+	a new updated tree as a virtual guest, running arbitrary
+	testing code, and pulling out telemetry such as log files for
+	display.
+      </p>
+      <p>
+	Concretely, the <a href="#build-status">build-status</a>
+	results are <i>live</i> - the screenshots will change as the
+	packages change, automatically.
+      </p>
+      <h3>Short Term Goal - Testing OSTree</h3>
+      <p>
+	While the core OSTree codebase is now fairly stable,
+	rpm-ostree is undergoing rapid evolution.  It's only recently
+	that SELinux is fully enforcing, for example.  The goal is for
+	everything to be packaged, and to become a more integrated
+	part of the Fedora Infrastructure.
+      </p>
+      </div>
     </div>
   </div>
 </article>
