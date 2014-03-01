@@ -20,7 +20,7 @@
             $scope.runningState = text;
         });
 
-	let latestSmoketestPath = ROOT + 'results/tasks/smoketest';
+	var latestSmoketestPath = ROOT + 'results/tasks/smoketest';
         var productsBuiltPath = latestSmoketestPath + '/products-built.json';
 	console.log("Retrieving products-built.json");
 	$http.get(productsBuiltPath).success(function(data) {
