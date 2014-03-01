@@ -20,7 +20,8 @@
             $scope.runningState = text;
         });
 
-        var productsBuiltPath = ROOT + 'results/tasks/build/products-built.json';
+	let latestSmoketestPath = ROOT + 'results/tasks/smoketest';
+        var productsBuiltPath = latestSmoketestPath + '/products-built.json';
 	console.log("Retrieving products-built.json");
 	$http.get(productsBuiltPath).success(function(data) {
 	    var trees = data['trees'];
@@ -28,7 +29,7 @@
 		var treeData = trees[ref];
 		var refUnix = ref.replace(/\//g, '-');
 		treeData.refUnix = refUnix;
-		treeData.screenshotUrl = '/results/tasks/smoketest/smoketest/work-' + refUnix + '/screenshot-final.png';
+		treeData.screenshotUrl = latestSmoketestPath + '/smoketest/work-' + refUnix + '/screenshot-final.png';
 	    }
 	    $scope.trees = trees;
 	});
