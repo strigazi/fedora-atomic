@@ -1,41 +1,6 @@
 <article>
   <div class="container">
     <div class="starter-template">
-      <h3>/usr/lib/passwd and nss-altfiles</h3>
-      <p>
-	A change to
-	include <a href="https://sourceware.org/bugzilla/show_bug.cgi?id=16142">/usr/lib/passwd</a>
-	is required; this is implemented currently by
-	the <tt>nss-altfiles</tt> package.  See
-	also <a href="http://fedorapeople.org/~walters/Use-usr-lib-passwd-for-system-users-if-it-exists.patch">this
-	  patch</a> for shadow-utils.
-      </p>
-      <h3>/var should be dynamically populated</h3>
-      <p>
-	All RPMs should stop shipping files and directories
-	in <tt>/var</tt>.
-	See <a href="https://people.gnome.org/~walters/ostree/doc/layout.html">this
-	  section</a> of the OSTree documentation.
-      </p>
-      <p>
-	RPM should cope with its database living
-	in <tt>/usr/share/rpm</tt> and being immutable.
-      </p>
-      <h3>SELinux support</h3>
-      <p>OSTree was designed from the very beginning to work with SELinux; it just
-	needs some bugfixes and integration on the rpm-ostree side.</p>
-      <h3>Anaconda support</h3>
-      <p>Anaconda should have an OSTree backend in addition to RPM.  A basic UI
-	that provides a listview of shipped trees and allows picking them would
-	be quite sufficient initially.</p>
-      <h3>Dracut</h3>
-      <p>OSTree, when replicating content from a build server, effectively reverts
-	the <a href="https://fedoraproject.org/wiki/Features/DracutHostOnly">Dracut
-	  host-only mode</a>.  Furthermore, at the moment we hardcode
-	/etc/machine-id, which is a definite bug that needs to be fixed.
-	Possibly systemd should support reading the machine ID from the
-	kernel commandline, as it's the only host-writable area available
-	in early boot.</p>
       <h3>Development area: OSTree Layering</h3>
       <p>
 	This phase would be allowing "layering" of trees.  For example,
