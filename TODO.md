@@ -9,18 +9,18 @@ that calls out to programs to do semantic merges of things like
 Thus, /usr/lib/passwd contains the system users, and /etc/passwd
 contains locally-added users.
 
-[sourceware bug 16142](https://sourceware.org/bugzilla/show_bug.cgi?id=16142)
+https://sourceware.org/bugzilla/show_bug.cgi?id=16142
 
 This is presently implemented by the `nss-altfiles` package and
-[patch for shadow-utils](http://fedorapeople.org/~walters/Use-usr-lib-passwd-for-system-users-if-it-exists.patch)
+http://fedorapeople.org/~walters/Use-usr-lib-passwd-for-system-users-if-it-exists.patch
 
 /var
 ----
 
 RPMs should stop shipping static content here. See:
 
-[ostree layout](https://people.gnome.org/~walters/ostree/doc/layout.html)
-[systemd discussion](https://www.mail-archive.com/systemd-devel@lists.freedesktop.org/msg17210.html)
+https://people.gnome.org/~walters/ostree/doc/layout.html
+https://www.mail-archive.com/systemd-devel@lists.freedesktop.org/msg17210.html
 
 Anaconda
 --------
@@ -33,10 +33,10 @@ Dracut
 ------
 
 OSTree, when replicating content from a build server, effectively reverts
-[DracutHostOnly](https://fedoraproject.org/wiki/Features/DracutHostOnly) change.
+https://fedoraproject.org/wiki/Features/DracutHostOnly change.
 
 Furthermore, at the moment we hardcode /etc/machine-id:
-[ostree bug 724833](https://bugzilla.gnome.org/show_bug.cgi?id=724833)
+https://bugzilla.gnome.org/show_bug.cgi?id=724833
 
 Yum/dnf/rpm
 -----------
@@ -47,4 +47,4 @@ is underneath them.  This is mostly implemented now.
 A much longer term phase would allow installing packages on top of an
 OSTree base.  This requires numerous changes.  See:
 
-[fedora desktop list discussion](https://lists.fedoraproject.org/pipermail/desktop/2014-February/009305.html)
+https://lists.fedoraproject.org/pipermail/desktop/2014-February/009305.html
