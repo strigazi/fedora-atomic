@@ -20,6 +20,7 @@ http://fedorapeople.org/~walters/Use-usr-lib-passwd-for-system-users-if-it-exist
 RPMs should stop shipping static content here. See:
 
 https://people.gnome.org/~walters/ostree/doc/layout.html
+
 https://www.mail-archive.com/systemd-devel@lists.freedesktop.org/msg17210.html
 
 Anaconda
