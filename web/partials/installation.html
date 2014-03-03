@@ -2,20 +2,26 @@
   <div class="container">
     <div class="starter-template">
       <h3>Trying a preconfigured virtual machine</h3>
-      <p>If you just want to experiment with complete safety, there
-	are automatically and continuously generated VM images for
-	each tree.
+      <p>If you just want to experiment with a high degree of safety,
+	virtual machines are a great way to do so (you can also use a
+	spare bare metal machine, to do so see below).  For VMs, a
+	recommended starting point is the latest release of
+	the <tt>base/core</tt>.
       </p>
-      <p><a class="btn btn-lg btn-primary" href="http://rpm-ostree.cloud.fedoraproject.org/images/releases">Download Release disks</a></p>
+      <p><a class="btn btn-lg btn-primary" href="http://rpm-ostree.cloud.fedoraproject.org/images/releases">Download release disks</a></p>
       <p>
-	A recommended starting point is the <tt>base/core</tt> VM.
-	Download and provision in virt-manager by:
+	For example, you can download and uncompress as one step into
+	virt-manager's <tt>images</tt> directory by:
 	<pre>
 	  cd /var/lib/libvirt/images
 	  curl http://rpm-ostree.cloud.fedoraproject.org/images/releases/2014.5/fedora-atomic-rawhide-x86_64-buildmaster-base-core-2014.5.qcow2.xz | xz -d > fedora-atomic-base-core.qcow2
 	</pre>
 	Then using e.g. <tt>virt-manager</tt>, choose "Import existing disk image".
       </p>
+      <p>There are also automatically and continuously generated VM
+	images for each tree in
+	the <a href="http://rpm-ostree.cloud.fedoraproject.org/images/auto">images/auto</a>
+	directory.</p>
       <h3>Installing inside an existing OS</h3>
       <p>First, you should understand what you'll be doing here.  OSTree
 	allows dynamically parallel installing operating systems;
@@ -49,7 +55,6 @@
 	<a href="http://copr-fe.cloud.fedoraproject.org/coprs/walters/rpm-ostree/">walters/rpm-ostree</a>
 	COPR.  The package name is <tt>rpm-ostree-public-gpg-key</tt>.
       </p>
-      <pre>
       <p>We still have only initialized configuration.  This next step
 	will just download (but not install) a system with just <tt>@core</tt>:</p>
       <pre>
