@@ -63,7 +63,7 @@
       <p>This step extracts the root filesystem, and updates the bootloader
 	configuration:</p>
       <pre>
-	ostree admin deploy --os=fedora-atomic --karg-proc-cmdline --karg=selinux=0 fedora-atomic:fedora-atomic/rawhide/x86_64/buildmaster/base/core
+	ostree admin deploy --os=fedora-atomic --karg-proc-cmdline fedora-atomic:fedora-atomic/rawhide/x86_64/buildmaster/base/core
       </pre>
       <p>Now, we need to copy in the storage configuration from the "host":</p>
       <pre>
