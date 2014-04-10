@@ -38,7 +38,7 @@
 	"server":
 	{
 	    "docker-io": { "comment": "A system to just run Docker",
-			   "packages": ["@core", "@standard", "docker-io", "geard"],
+			   "packages": ["@core", "@standard", "docker-io"],
 			   "units": ["docker.service"]
 			 },
 	    "virthost": { "comment": "A system to just run libvirt",
