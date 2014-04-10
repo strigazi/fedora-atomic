@@ -38,11 +38,11 @@
 	"server":
 	{
 	    "docker-io": { "comment": "A system to just run Docker",
-			   "packages": ["@core", "@standard", "docker-io"],
+			   "packages": ["@core", "@standard", "cockpit", "docker-io"],
 			   "units": ["docker.service"]
 			 },
 	    "virthost": { "comment": "A system to just run libvirt",
-			  "packages": ["@core", "@standard",
+			  "packages": ["@core", "@standard", "cockpit",
 				       "libvirt-daemon-kvm",
 				       "libvirt-daemon-config-network",
 				       "qemu-kvm",
