@@ -1,81 +1,33 @@
 <article>
   <div class="container">
     <div class="starter-template">
-      <h3>Packages, Trees, and Images</h3>
-      <div class="media">
-	<span class="pull-left">
-	  <img class="media-object" src="Wikipedia-GroceryStore.jpg" alt="Grocery store" width="320"></span>
-	<div class="media-body">
-	  <p class="lead">Packages</p>
-	  <p>
-	    Traditional GNU/Linux distributions come as a collection
-	    of packages - this is like a grocery store.  There's an
-	    effectively infinite variety of ways one can assemble
-	    the parts.  Not all combinations make sense (in fact,
-	    very few do), but hopefully none will be actively
-	    harmful.
-	  </p>
-	  <p>
-	    Each time you go to a grocery store (upgrade), you are
-	    responsible for reassembling from parts any meals you
-	    like.
-	  </p>
-	</div>
-      </div>
-      <div class="media">
-	<img class="pull-left media-object" src="Restaurant.png" alt="Restaurant" width="320">
-	<div class="media-body">
-	  <p class="lead">OSTree Repository</p>
-	  <p>
-	    An OSTree repository is more like a restaurant.  You can
-	    choose from a number of <strong>pre-assembled</strong>
-	    meals (filesystem trees).  But not an infinite variety.
-	    Each meal has a <strong>name</strong>, and when you
-	    re-visit the restaurant, you can get a newer (and
-	    hopefully improved) version of that same meal, or at any
-	    time <strong>try a different one</strong>.
-	  <p>
-	    For Fedora and other operating system vendors, OSTree can
-	    act like a restaurant <i>in partnership with</i> a grocery
-	    store.  If you like some of the meals, you can take the
-	    ingredients and recipies (packages and scripts), and make
-	    your own.
-	  </p>
-	</div>
-      </div>
-      <div class="media">
-	<img class="pull-left media-object" src="AirplaneFood.png" alt="Airplane food" width="320">
-	<div class="media-body">
-	  <p class="lead">Images</p>
-	  <p>
-	    The analogy isn't as strong here, but traditional
-	    image-based systems such as
-	    <a href="http://www.chromium.org/chromium-os">ChromeOS</a>
-	    and
-	    <a href="https://coreos.com/">CoreOS</a> are a bit more
-	    like a short (or cheap) airplane flight where you have
-	    exactly one choice of meal.
-	  </p>
-	  <p>
-	    Image systems are good in that they fulfill a reliable,
-	    targeted purpose.  Additionally of course, many of these
-	    kinds of operating systems come with application mechanisms
-	    on top.  For ChromeOS, that's web pages.  For CoreOS, it's
-	    <a href="https://www.docker.io/">Docker</a>.
-	  </p>
-	  <p>
-	    This lets them do quite a bit - but not everything fits
-	    cleanly into the "application" or "OS" box.  For example,
-	    development headers and tools.  Neither ChromeOS nor
-	    CoreOS have an answer for a mechanism to help you develop
-	    the system itself.
-	  </p>
-	</div>
+      <h3>Compose, then replicate</h3>
+      <div>
+	<p>Anywhere you use RPM packages today to deploy to client
+	  systems, the rpm-ostree model allows you to optionally
+	  pre-compose that package set on a server.  Client systems
+	  then have an immutable OS, but with online and atomic
+	  upgrades to newer versions.
+	</p>
+	<p>
+	  This OSTree model sits somewhere between traditional package
+	  systems and image-based updates.  For example, an OSTree
+	  "tree" can be deployed on any Unix filesystem and block
+	  storage layout.  Client systems can pull it, and incrementally
+	  download updates online.
+	</p>
+	<p>
+	  In this model, the RPM database lives
+	  in <tt>/usr/share/rpm</tt>, and a compatibility symlink
+	  from <tt>/var/lib/rpm</tt> allows rpm to still operate in
+	  read-only mode.  You can <tt>rpm -q</tt> and determine what
+	  packages are installed.
+	</p>
       </div>
       <h3>Short Term Goal - Testing Rawhide</h3>
       <p>
 	The Atomic Initiative will track Fedora Rawhide, assembling
-	packages into filesystem trees, and offering them for atomic
+	packages into filesystem trees, and offering them for
 	replication by both human and machine consumers.
       </p>
       <p>
@@ -92,14 +44,19 @@
 	results are <i>live</i> - the screenshots will change as the
 	packages change, automatically.
       </p>
-      <a class="btn btn-default" href="#build-status">Build status &raquo;</a>
-      <h3>Short Term Goal - Testing OSTree</h3>
+      <a class="btn btn-default" href="#composeui">Build status &raquo;</a>
+      <h3>Short Term Goal - Merging RPM-OSTree into Fedora</h3>
       <p>
 	While the core OSTree codebase is now fairly stable,
-	rpm-ostree is undergoing rapid evolution.  It's only recently
-	that SELinux is fully enforcing, for example.  The goal is for
+	rpm-ostree is undergoing rapid evolution.  The goal is for
 	everything to be packaged, and to become a more integrated
-	part of the Fedora Infrastructure.
+	part of the Fedora Infrastructure.  At the moment,
+	a <a href="http://lists.alioth.debian.org/pipermail/pkg-shadow-devel/2014-March/010099.html">patched
+	version</a> shadow-utils is the only package not in Fedora.
+      </p>
+      <p>
+	For more information on the <tt>/usr/lib/passwd</tt> issue, see
+	<a href="https://lists.fedoraproject.org/pipermail/devel/2014-April/197783.html">fedora-devel-list thread</a>.
       </p>
       <a class="btn btn-default" href="#implementation">More implementation &raquo;</a>
     </div>
