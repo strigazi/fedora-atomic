@@ -23,7 +23,7 @@
 
     "packages": ["kernel", "rpm-ostree", "generic-release", "lvm2",
 		 "btrfs-progs", "e2fsprogs", "xfsprogs",
-		 "extlinux",
+		 "syslinux-extlinux",
 		 "rpm-ostree-public-gpg-key", "gnupg2"],
 
     "postprocess": ["remove-root-password"],
