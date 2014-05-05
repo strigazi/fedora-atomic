@@ -19,9 +19,10 @@
 
     "kargs": ["quiet"],
 
-    "bootstrap_packages": ["filesystem", "glibc", "nss-altfiles", "shadow-utils"],
+    "bootstrap_packages": ["filesystem", "glibc", "nss-altfiles", "shadow-utils",
+			   "generic-release"],
 
-    "packages": ["kernel", "rpm-ostree", "generic-release", "lvm2",
+    "packages": ["kernel", "rpm-ostree", "lvm2",
 		 "btrfs-progs", "e2fsprogs", "xfsprogs",
 		 "syslinux-extlinux", "authconfig",
 		 "rpm-ostree-public-gpg-key", "gnupg2"],
