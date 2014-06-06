@@ -1,0 +1,7 @@
+{
+    "include": "fedora-atomic-workstation-gnome-core.json",
+    
+    "ref": "fedora-atomic/rawhide/x86_64/workstation/gnome/devel",
+
+    "packages": ["@firefox", "@gnome-games", "@libreoffice", "@virtualization", "@development-tools"]
+}

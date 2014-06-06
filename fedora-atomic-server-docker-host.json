@@ -1,0 +1,9 @@
+{
+    "include": "fedora-atomic-base.json",
+
+    "ref": "fedora-atomic/rawhide/x86_64/server/docker-host",
+
+    "packages": ["@standard", "cockpit", "geard", "docker-io"],
+
+    "units": ["docker.service", "docker.socket"]
+}

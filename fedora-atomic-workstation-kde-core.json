@@ -1,0 +1,7 @@
+{
+    "include": "fedora-atomic-base.json",
+
+    "ref": "fedora-atomic/rawhide/x86_64/workstation/kde/core",
+
+    "packages": ["@standard", "@base-x", "@kde-desktop"]
+}
