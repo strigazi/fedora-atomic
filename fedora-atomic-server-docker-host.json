@@ -5,5 +5,6 @@
 
     "packages": ["@standard", "cockpit", "geard", "docker-io"],
 
-    "units": ["docker.service", "docker.socket"]
+    "units": ["docker.service", "docker.socket",
+	      "geard.service"]
 }
