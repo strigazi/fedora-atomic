@@ -18,5 +18,7 @@
 		 "btrfs-progs", "e2fsprogs", "xfsprogs",
 		 "syslinux-extlinux", "authconfig",
 		 "rpm-ostree-public-gpg-key", "gnupg2",
-		 "@core"]
+		 "@core"],
+
+    "default_target": "multi-user.target"
 }
