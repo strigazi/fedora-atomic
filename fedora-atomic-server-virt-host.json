@@ -9,5 +9,5 @@
 		 "qemu-kvm",
 		 "libguestfs-tools"],
 
-    "units": ["libvirtd.service"]
+    "units": ["libvirtd.service", "cockpit.socket"]
 }
