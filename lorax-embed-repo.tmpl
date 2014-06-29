@@ -8,5 +8,5 @@ runcmd ostree --repo=${root}/install/ostree init --mode=archive-z2
 runcmd ostree --repo=${root}/install/ostree pull-local --disable-fsync ${ostree_repo} ${ostree_ref}
 
 append usr/share/anaconda/interactive-defaults.ks "bootloader --timeout=3 --extlinux\n"
-append usr/share/anaconda/interactive-defaults.ks "ostreesetup --nogpg --osname=rhel-atomic-host --remote=installmedia --url=file:///install/ostree --ref=${ostree_ref}\n"
+append usr/share/anaconda/interactive-defaults.ks "ostreesetup --nogpg --osname=fedora-atomic-host --remote=installmedia --url=file:///install/ostree --ref=${ostree_ref}\n"
 
