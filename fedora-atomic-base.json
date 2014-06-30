@@ -14,7 +14,7 @@
     "bootstrap_packages": ["filesystem", "glibc", "nss-altfiles", "shadow-utils",
 			   "generic-release"],
 
-    "packages": ["kernel", "rpm-ostree", "lvm2",
+    "packages": ["dracut-config-generic", "kernel", "rpm-ostree", "lvm2",
 		 "btrfs-progs", "e2fsprogs", "xfsprogs",
 		 "syslinux-extlinux", "authconfig",
 		 "rpm-ostree-public-gpg-key", "gnupg2",
