@@ -4,8 +4,6 @@
     "osname": "fedora-atomic",
     "ref": "fedora-atomic/rawhide/x86_64/base",
     
-    "gpg_key": "843833DF",
-
     "repos": ["fedora-rawhide", "walters-rpm-ostree",
 	      "fedora-rawhide-kernel-nodebug"],
 
@@ -17,8 +15,7 @@
     "packages": ["dracut-config-generic", "kernel", "rpm-ostree", "lvm2",
 		 "btrfs-progs", "e2fsprogs", "xfsprogs",
 		 "syslinux-extlinux", "authconfig",
-		 "rpm-ostree-public-gpg-key", "gnupg2",
-		 "@core"],
+		 "gnupg2", "@core"],
 
     "default_target": "multi-user.target"
 }
