@@ -3,7 +3,20 @@
 
     "ref": "fedora-atomic/rawhide/x86_64/server/docker-host",
 
-    "packages": ["@standard", "cockpit", "geard", "docker-io"],
+    "packages": ["tar",
+		 "rsync",
+		 "man-db",
+		 "man-pages",
+		 "bash-completion",
+		 "tmux",
+		 "git",
+		 "strace", "lsof", "tcpdump", "nmap-ncat",
+		 "policycoreutils-python",
+		 "setools-console",
+		 "audit",
+		 "cockpit",
+		 "geard",
+		 "docker-io"],
 
     "units": ["docker.socket", "geard.service", "cockpit.socket"]
 }
