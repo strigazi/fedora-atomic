@@ -1,9 +1,0 @@
-{
-    "include": "fedora-atomic-base.json",
-    
-    "ref": "fedora-atomic/rawhide/x86_64/workstation/gnome/core",
-
-    "packages": ["@standard", "@base-x", "@gnome-desktop"],
-
-    "default_target": "graphical.target"
-}
