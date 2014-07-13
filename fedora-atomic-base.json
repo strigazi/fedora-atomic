@@ -4,8 +4,7 @@
     "osname": "fedora-atomic",
     "ref": "fedora-atomic/rawhide/x86_64/base",
     
-    "repos": ["fedora-rawhide", "walters-rpm-ostree",
-	      "fedora-rawhide-kernel-nodebug"],
+    "repos": ["fedora-rawhide"],
 
     "selinux": true,
 
