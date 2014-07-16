@@ -1,10 +1,5 @@
 {
-    "treefiles": ["fedora-atomic-base.json",
-		  "fedora-atomic-server-docker-host.json",
-		  "fedora-atomic-server-virt-host.json",
-		  "fedora-atomic-workstation-gnome-core.json",
-		  "fedora-atomic-workstation-gnome-devel.json",
-		  "fedora-atomic-workstation-kde-core.json"],
+    "treefiles": ["fedora-atomic-server-docker-host.json"],
 
     "poll-timeout": 360,
 
