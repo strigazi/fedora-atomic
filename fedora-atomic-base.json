@@ -9,7 +9,7 @@
     "selinux": true,
 
     "bootstrap_packages": ["filesystem", "glibc", "nss-altfiles", "shadow-utils",
-			   "generic-release"],
+			   "fedora-release"],
 
     "packages": ["dracut-config-generic", "kernel", "rpm-ostree", "lvm2",
 		 "btrfs-progs", "e2fsprogs", "xfsprogs",
