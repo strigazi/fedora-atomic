@@ -17,9 +17,8 @@
 		 "policycoreutils-python",
 		 "setools-console",
 		 "audit",
-		 "cockpit",
 		 "geard",
 		 "docker-io"],
 
-    "units": ["docker.socket", "geard.service", "cockpit.socket"]
+    "units": ["docker.socket", "geard.service"]
 }
