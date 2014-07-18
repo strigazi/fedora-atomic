@@ -4,6 +4,7 @@
     "ref": "fedora-atomic/rawhide/x86_64/cloud/docker-host",
 
     "packages": ["tar",
+		 "cloud-init",
 		 "rsync",
 		 "man-db",
 		 "man-pages",
