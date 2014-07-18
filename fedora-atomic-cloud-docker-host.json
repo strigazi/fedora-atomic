@@ -5,6 +5,8 @@
 
     "packages": ["tar",
 		 "cloud-init",
+		 "heat-cfntools",
+		 "cloud-utils-growpart",
 		 "rsync",
 		 "man-db",
 		 "man-pages",
