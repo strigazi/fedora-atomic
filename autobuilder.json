@@ -1,5 +1,5 @@
 {
-    "treefiles": ["fedora-atomic-server-docker-host.json"],
+    "treefiles": ["fedora-atomic-cloud-docker-host.json"],
 
     "poll-timeout": 360,
 
