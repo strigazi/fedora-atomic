@@ -1,7 +1,7 @@
 {
     "include": "fedora-atomic-base.json",
 
-    "ref": "fedora-atomic/rawhide/x86_64/cloud/docker-host",
+    "ref": "fedora-atomic/rawhide/x86_64/docker-host",
 
     "packages": ["tar",
 		 "cloud-init",
