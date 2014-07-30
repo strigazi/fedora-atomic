@@ -1,0 +1,19 @@
+OUTPUTDIR=${OUTPUTDIR:-/srv/output}
+WORKDIR=$(pwd)
+SRCDIR=$(dirname $0)/../
+
+OSTREE_REPO=${OUTPUTDIR}/repo
+
+RPMOSTREE_CACHEDIR=${WORKDIR}cache
+
+OSNAME=fedora-atomic
+TREEFILE=${OSNAME}-${TREENAME}.json
+OS_PRETTY_NAME="Fedora Atomic"
+TREENAME=docker-host
+ARCH=x86_64
+RELEASE=rawhide
+
+YUM_BASEURL=
+LOCAL_OVERRIDES=
+
+REF=${OSNAME}/${RELEASE}/${ARCH}/${TREENAME}
