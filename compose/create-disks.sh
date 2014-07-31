@@ -43,7 +43,11 @@ if test -n "${LOCAL_OVERRIDES}"; then
     LORAX_LOCAL_OVERRIDES="-s ${LOCAL_OVERRIDES}"
 fi
 
-lorax --add-template=${WORKDIR}/fedora-atomic/lorax-embed-repo.tmpl --add-template-var=ostree_repo=${OSTREE_REPO} --add-template-var=ostree_ref=${REF} -p ${OS_PRETTY_NAME} -v ${RELEASE} -r ${RELEASE} -s ${YUM_BASEURL} ${LORAX_LOCAL_OVERRIDES} ${tmpdir}/lorax
+if test -n "${http_proxy}"; then
+    LORAX_PROXY="--proxy ${http_proxy}"
+fi
+
+lorax --add-template=${WORKDIR}/fedora-atomic/lorax-embed-repo.tmpl ${LORAX_PROXY} --add-template-var=ostree_repo=${OSTREE_REPO} --add-template-var=ostree_ref=${REF} -p "${OS_PRETTY_NAME}" -v "${RELEASE}" -r "${RELEASE}" -s "${YUM_BASEURL}" ${LORAX_LOCAL_OVERRIDES} "${tmpdir}/lorax"
 
 # Cherry pick just one bit from lorax
 mkdir -p $(dirname ${imgtargetinstaller})
