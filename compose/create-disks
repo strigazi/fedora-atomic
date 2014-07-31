@@ -36,7 +36,7 @@ if test -d "${imgoutdir}"; then
     exit 1
 fi
 
-tmpdir=$(mktemp -d)
+tmpdir=${tmpdir:-$(mktemp -d)}
 cd ${tmpdir}
 
 # guestfs runs qemu with reduced privileges apparently
@@ -66,42 +66,53 @@ if test -n "${http_proxy}"; then
     LORAX_PROXY="--proxy ${http_proxy}"
 fi
 
-mkdir lorax-out
-cd lorax-out
-# FIXME - need to embed ${REV} here.  Needs pykickstart patches.
-lorax --nomacboot --add-template=${WORKDIR}/fedora-atomic/lorax-embed-repo.tmpl ${LORAX_PROXY} --add-template-var=ostree_repo=${OSTREE_REPO} --add-template-var=ostree_ref=${REF} -p "${OS_PRETTY_NAME}" -v "${RELEASE}" -r "${RELEASE}" -s "${YUM_BASEURL}" ${LORAX_LOCAL_OVERRIDES} "${tmpdir}/lorax"
-cd -
-
-# Cherry pick just one bit from lorax
-mkdir -p $(dirname ${imgtargetinstaller})
-mv lorax/images/boot.iso ${imgtargetinstaller}
+if ! test -f ${imgtargetinstaller}; then
+    mkdir -p lorax-out
+    cd lorax-out
+    # FIXME - need to embed ${REV} here.  Needs pykickstart patches.
+    lorax --nomacboot --add-template=${WORKDIR}/fedora-atomic/lorax-embed-repo.tmpl ${LORAX_PROXY} --add-template-var=ostree_repo=${OSTREE_REPO} --add-template-var=ostree_ref=${REF} -p "${OS_PRETTY_NAME}" -v "${RELEASE}" -r "${RELEASE}" -s "${YUM_BASEURL}" ${LORAX_LOCAL_OVERRIDES} "${tmpdir}/lorax"
+    cd -
+    # Cherry pick just one bit from lorax
+    mkdir -p $(dirname ${imgtargetinstaller})
+    mv lorax/images/boot.iso ${imgtargetinstaller}
+fi
 
 # Create base image
-rpm-ostree-toolbox create-vm-disk "${OSTREE_REPO}" "${OSNAME}" "${REF}" "${imgtarget}"
+if ! test -f ${imgtarget}; then
+    rpm-ostree-toolbox create-vm-disk "${OSTREE_REPO}" "${OSNAME}" "${REF}" "${imgtarget}"
+fi
 
 # Cloud image
-mkdir -p $(dirname "${imgtargetcloud}")
-cp "${imgtarget}" "${imgtargetcloud}"
-rpm-ostree-toolbox postprocess-disk "${imgtargetcloud}" ${mydir}/cloud-postprocess.json
-rm cloud-postprocess.json
-xz "${imgtargetcloud}"
+if ! test -f ${imgtargetcloud}.xz; then
+    mkdir -p $(dirname "${imgtargetcloud}")
+    cp "${imgtarget}" "${imgtargetcloud}"
+    rpm-ostree-toolbox postprocess-disk "${imgtargetcloud}" ${mydir}/cloud-postprocess.json
+    xz "${imgtargetcloud}"
+fi
 
 # Vagrant box
-tmpqcow=${imagestmpdir}/vagrant-libvirt/${OSNAME}.qcow2
-mkdir -p $(dirname "${tmpqcow}")
-cp "${imgtarget}" "${tmpqcow}"
+if ! test -f "${imgtargetvagrantlibvirt}"; then
+    tmpqcow=${imagestmpdir}/vagrant-libvirt/${OSNAME}.qcow2
+    mkdir -p $(dirname "${tmpqcow}")
+    cp "${imgtarget}" "${tmpqcow}"
+    
+    rpm-ostree-toolbox postprocess-disk "${tmpqcow}" ${mydir}/vagrant/vagrant-postprocess.json
+    
+    mv "${tmpqcow}" box.img
+    
+    cp ${mydir}/vagrant/{Vagrantfile,metadata.json} .
 
-rpm-ostree-toolbox postprocess-disk "${tmpqcow}" ${mydir}/vagrant-postprocess.json
-
-mv "${tmpqcow}" box.img
-
-cp ${mydir}/vagrant/{Vagrantfile,metadata.json} .
-
-tar -cjv -f "${imgtargetvagrantlibvirt}" Vagrantfile metadata.json box.img
-rm -f Vagrantfile metadata.json box.img
+    tar -cjv -f "${imgtargetvagrantlibvirt}" Vagrantfile metadata.json box.img
+    rm -f Vagrantfile metadata.json box.img
+fi
 
 rm "${imgtarget}"
 
-mv "${imgtmpdir}" "${imgoutdir}"
+cd ${imagestmpdir}
+find -type f | xargs sha256sum > SHA256SUMS
+cd -
+
+mkdir -p $(dirname "${imgoutdir}")
+mv "${imagestmpdir}" "${imgoutdir}"
 
 echo "Done!"
