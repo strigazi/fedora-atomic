@@ -46,7 +46,7 @@ _,newrev = repo.resolve_rev(os.environ['REF'], True)
 if origrev != newrev:
     print "%s => %s" % (os.environ['REF'], newrev)
     os.environ['REV'] = newrev
-    subprocess.check_call([selfdir + '/create-disks.sh'])
+    subprocess.check_call([selfdir + '/create-disks'])
 else:
     print "%s is unchanged at %s" % (os.environ['REF'], origrev)
 
