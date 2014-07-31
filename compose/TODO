@@ -1,0 +1,4 @@
+* Have tree composes run asynchronously from disk generation
+
+* Ensure we generate disk images from a consistent revision - right
+  now each tool will resolve the ref independently.

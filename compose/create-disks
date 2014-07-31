@@ -36,7 +36,7 @@ if test -d "${imgoutdir}"; then
     exit 1
 fi
 
-tmpdir=${tmpdir:-$(mktemp -d)}
+tmpdir=${tmpdir:-$(mktemp -d /var/tmp/atomic.XXXXXX)}
 cd ${tmpdir}
 
 # guestfs runs qemu with reduced privileges apparently
@@ -109,8 +109,9 @@ fi
 rm "${imgtarget}"
 
 cd ${imagestmpdir}
-find -type f | xargs sha256sum > SHA256SUMS
+find -type f | xargs sha256sum > ${tmpdir}/SHA256SUMS
 cd -
+mv ${tmpdir}/SHA256SUMS ${imagestmpdir}
 
 mkdir -p $(dirname "${imgoutdir}")
 mv "${imagestmpdir}" "${imgoutdir}"
