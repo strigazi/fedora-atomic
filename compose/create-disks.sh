@@ -21,6 +21,9 @@ set -x
 
 tmpdir=$(mktemp -d)
 
+# guestfs runs qemu with reduced privileges apparently
+chmod a+rx "${tmpdir}"
+
 . $(dirname $0)/config.sh
 
 imagestmpdir=${tmpdir}/images
