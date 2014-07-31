@@ -28,7 +28,7 @@ rpm-ostree compose tree --repo=${OSTREE_REPO} --cachedir=${RPMOSTREE_CACHEDIR} $
 newrev=$(ostree --repo=${OSTREE_REPO} rev-parse ${REF})
 if test x${origrev} != ${newrev}; then
     echo "${REF} => ${newrev}"
-    ./create-disks.sh
+    $(dirname $0)/create-disks.sh
 else
     echo "${REF} is unchanged at ${origrev}"
 fi
