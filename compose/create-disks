@@ -1,0 +1,107 @@
+#!/bin/bash
+# Copyright (C) 2014 Colin Walters <walters@verbum.org>
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+
+set -e
+set -x
+
+mydir=$(dirname $0)
+. ${mydir}/config.sh
+
+if test -z "${REV}"; then
+    REV=$(ostree --repo=${OSTREE_REPO} rev-parse "${REF}")
+fi
+
+commitdate=$(ostree --repo=${OSTREE_REPO} show "${REV}" | egrep '^Date:' | sed -e 's,Date:,,')
+commitdatedir=$(date --date="${commitdate}" '+%Y/%m/%d')
+
+imgoutdir=${IMAGEOUTPUTDIR}/$(echo ${REV} | cut -b -8)
+
+if test -d "${imgoutdir}"; then
+    echo "${imgoutdir} already exists"
+    exit 1
+fi
+
+tmpdir=$(mktemp -d)
+cd ${tmpdir}
+
+# guestfs runs qemu with reduced privileges apparently
+chmod a+rx "${tmpdir}"
+
+imagestmpdir=${tmpdir}/images
+
+imgtarget=${imagestmpdir}/${OSNAME}.qcow2
+imgtargetinstaller=${imagestmpdir}/install/${OSNAME}-installer.iso
+imgtargetcloud=${imagestmpdir}/cloud/${OSNAME}.qcow2
+imgtargetvagrantlibvirt=${imagestmpdir}/vagrant-libvirt/${OSNAME}.box
+
+mkdir -p ${imagestmpdir}
+
+if test -z "${YUM_BASEURL}"; then
+    case ${RELEASE} in
+	rawhide|21) YUM_BASEURL=http://download.fedoraproject.org/pub/fedora/linux/development/${RELEASE}/$ARCH/os/;;
+	*) YUM_BASEURL=http://download.fedoraproject.org/pub/fedora/linux/releases/${RELEASE}/$ARCH/os/
+    esac
+fi
+
+if test -n "${LOCAL_OVERRIDES}"; then
+    LORAX_LOCAL_OVERRIDES="-s ${LOCAL_OVERRIDES}"
+fi
+
+if test -n "${http_proxy}"; then
+    LORAX_PROXY="--proxy ${http_proxy}"
+fi
+
+mkdir lorax-out
+cd lorax-out
+# FIXME - need to embed ${REV} here.  Needs pykickstart patches.
+lorax --nomacboot --add-template=${WORKDIR}/fedora-atomic/lorax-embed-repo.tmpl ${LORAX_PROXY} --add-template-var=ostree_repo=${OSTREE_REPO} --add-template-var=ostree_ref=${REF} -p "${OS_PRETTY_NAME}" -v "${RELEASE}" -r "${RELEASE}" -s "${YUM_BASEURL}" ${LORAX_LOCAL_OVERRIDES} "${tmpdir}/lorax"
+cd -
+
+# Cherry pick just one bit from lorax
+mkdir -p $(dirname ${imgtargetinstaller})
+mv lorax/images/boot.iso ${imgtargetinstaller}
+
+# Create base image
+rpm-ostree-toolbox create-vm-disk "${OSTREE_REPO}" "${OSNAME}" "${REF}" "${imgtarget}"
+
+# Cloud image
+mkdir -p $(dirname "${imgtargetcloud}")
+cp "${imgtarget}" "${imgtargetcloud}"
+rpm-ostree-toolbox postprocess-disk "${imgtargetcloud}" ${mydir}/cloud-postprocess.json
+rm cloud-postprocess.json
+xz "${imgtargetcloud}"
+
+# Vagrant box
+tmpqcow=${imagestmpdir}/vagrant-libvirt/${OSNAME}.qcow2
+mkdir -p $(dirname "${tmpqcow}")
+cp "${imgtarget}" "${tmpqcow}"
+
+rpm-ostree-toolbox postprocess-disk "${tmpqcow}" ${mydir}/vagrant-postprocess.json
+
+mv "${tmpqcow}" box.img
+
+cp ${mydir}/vagrant/{Vagrantfile,metadata.json} .
+
+tar -cjv -f "${imgtargetvagrantlibvirt}" Vagrantfile metadata.json box.img
+rm -f Vagrantfile metadata.json box.img
+
+rm "${imgtarget}"
+
+mv "${imgtmpdir}" "${imgoutdir}"
+
+echo "Done!"

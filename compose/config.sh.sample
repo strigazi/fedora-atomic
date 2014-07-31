@@ -1,19 +1,21 @@
-OUTPUTDIR=${OUTPUTDIR:-/srv/output}
-WORKDIR=$(pwd)
-SRCDIR=$(dirname $0)/../
+#!/bin/sh
 
-OSTREE_REPO=${OUTPUTDIR}/repo
+export OUTPUTDIR=${OUTPUTDIR:-/srv/output}
+export WORKDIR=$(pwd)
+export SRCDIR=$(dirname $0)/../
 
-RPMOSTREE_CACHEDIR=${WORKDIR}cache
+export OSTREE_REPO=${OUTPUTDIR}/repo
 
-OSNAME=fedora-atomic
-TREEFILE=${OSNAME}-${TREENAME}.json
-OS_PRETTY_NAME="Fedora Atomic"
-TREENAME=docker-host
-ARCH=x86_64
-RELEASE=rawhide
+export RPMOSTREE_CACHEDIR=${WORKDIR}/cache
 
-YUM_BASEURL=
-LOCAL_OVERRIDES=
+export OSNAME=fedora-atomic
+export TREEFILE=${OSNAME}-${TREENAME}.json
+export OS_PRETTY_NAME="Fedora Atomic"
+export TREENAME=docker-host
+export ARCH=x86_64
+export RELEASE=rawhide
 
-REF=${OSNAME}/${RELEASE}/${ARCH}/${TREENAME}
+# YUM_BASEURL=
+# LOCAL_OVERRIDES=
+
+export REF=${OSNAME}/${RELEASE}/${ARCH}/${TREENAME}
