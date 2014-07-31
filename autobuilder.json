@@ -1,0 +1,8 @@
+{
+    "treefiles": ["fedora-atomic-docker-host.json"],
+
+    "poll-timeout": 360,
+
+    "autoupdate-self": true
+}
+	    
