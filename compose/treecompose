@@ -19,34 +19,73 @@
 import os
 import sys
 import tempfile
+import argparse
 import subprocess
 from gi.repository import Gio, OSTree
+from iniparse import configparser
 
 print "%r" % (sys.argv, )
+
+parser = argparse.ArgumentParser(description='Compose OSTree trees and build images.')
+parser.add_argument('-c', '--config', type=str, default='./config.ini', help='Path to config file')
+parser.add_argument('-r', '--release', type=str, default='rawhide', help='Release to compose (references a config file section)')
+args = parser.parse_args()
+
 selfdir=os.path.dirname(sys.argv[0])
 
-proc = subprocess.Popen(['/bin/sh', '-c', '. ' + selfdir + '/config.sh; env'], stdout=subprocess.PIPE)
-for line in proc.stdout:
-    k,v = line.split('=', 1)
-    v = v.rstrip()
-    print "%s = %s" % (k, v)
-    os.environ[k] = v
+class Composer(object):
+    ATTRS = [ 'outputdir', 'workdir', 'srcdir', 'ostree_repo',
+              'rpmostree_cache_dir', 'os_name', 'os_pretty_name',
+              'tree_name', 'tree_file', 'arch', 'release', 'ref',
+              'yum_baseurl', 'local_overrides',
+            ]
 
-os.environ['SRCDIR'] = selfdir + '/..'
+    def __init__(self, configfile, release, selfdir='.'):
+        defaults = { 'workdir': os.getcwd(),
+                     'srcdir':  os.path.join(selfdir, '..'),
+                     'rpmostree_cache_dir': os.path.join(os.getcwd(), release, 'cache'),
+                     'yum_baseurl': None,
+                     'local_overrides': None,
+                   }
 
-repo = OSTree.Repo(path=Gio.File.new_for_path(os.environ['OSTREE_REPO']))
-repo.open(None)
+        settings = configparser.ConfigParser()
+        settings.read(configfile)
+        for attr in self.ATTRS:
+            setattr(self, attr, settings.get(release, attr, 0, defaults))
 
-_,origrev = repo.resolve_rev(os.environ['REF'], True)
+        self.repo = OSTree.Repo(path=Gio.File.new_for_path(self.ostree_repo))
+        self.repo.open(None)
 
-subprocess.check_call(['rpm-ostree', 'compose', 'tree', '--repo=' + os.environ['OSTREE_REPO'],
-                       '--cachedir=' + os.environ['RPMOSTREE_CACHEDIR'],
-                       os.environ['SRCDIR'] + '/' + os.environ['OSNAME'] + '-' + os.environ['TREENAME'] + '.json'])
-_,newrev = repo.resolve_rev(os.environ['REF'], True)
+        return
+
+    def show_config(self):
+        print "\n".join([ "%s=%s" % (x, getattr(self, x)) for x in self.ATTRS ])
+
+    def compose_tree(self):
+        # XXX: rpm-ostree should be handling this, I think
+        if not os.path.exists(self.rpmostree_cache_dir):
+            os.makedirs(self.rpmostree_cache_dir)
+        _,origrev = self.repo.resolve_rev(self.ref, True)
+        subprocess.check_call(['rpm-ostree', 'compose', 'tree', 
+                               '--repo=' + self.ostree_repo,
+                               '--cachedir=' + self.rpmostree_cache_dir,
+                               '%s/%s-%s.json' % (self.srcdir, self.os_name, 
+                                                  self.tree_name)])
+        _,newrev = self.repo.resolve_rev(self.ref, True)
+        return (origrev, newrev)
+
+    def create_disks(self):
+        subprocess.check_call([selfdir + '/create-disks'])
+
+## End Composer
+
+composer = Composer(args.config, args.release, selfdir)
+composer.show_config()
+origrev, newrev = composer.compose_tree()    
+
 if origrev != newrev:
-    print "%s => %s" % (os.environ['REF'], newrev)
-    os.environ['REV'] = newrev
-    subprocess.check_call([selfdir + '/create-disks'])
+    print "%s => %s" % (composer.ref, newrev)
+    composer.create_disks()
 else:
-    print "%s is unchanged at %s" % (os.environ['REF'], origrev)
+    print "%s is unchanged at %s" % (composer.ref, origrev)
 
