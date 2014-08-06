@@ -116,7 +116,7 @@ class Composer(object):
         os.makedirs(imagestmpdir)
 
         imgtargetinstaller=os.path.join(imagestmpdir, 'install', '%s-installer.iso' % self.os_name)
-        # self.create_installer_image(tmpdir, imgtargetinstaller)
+        self.create_installer_image(tmpdir, imgtargetinstaller)
 
         # imgtargetbase=os.path.join(imagestmpdir, self.os_name + '.qcow2')
         imgtargetcloud=os.path.join(imagestmpdir, 'cloud', '%s.qcow2' % self.os_name)
