@@ -159,6 +159,7 @@ class Composer(object):
         param.write(json.dumps(parameters))
         param.close()
 
+        os.chdir(os.path.join(self.ostree_repo, '..'))
         self.start_http_server()
         subprocess.check_call(['imagefactory', 'base_image',
                                os.path.join(self.srcdir,
