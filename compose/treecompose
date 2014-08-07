@@ -1,0 +1,216 @@
+#!/usr/bin/env python
+# Copyright (C) 2014 Colin Walters <walters@verbum.org>, Andy Grimm <agrimm@redhat.com>
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+
+import json
+import os
+import sys
+import tempfile
+import argparse
+import subprocess
+from gi.repository import Gio, OSTree, GLib
+from iniparse import configparser
+
+# For our http server thread
+import SimpleHTTPServer
+import BaseHTTPServer
+import threading
+import urllib
+
+def http_srv(directory, port, event):
+    handler = SimpleHTTPServer.SimpleHTTPRequestHandler
+    httpd = BaseHTTPServer.HTTPServer(('', port), handler)
+    print "Serving directory '%s' on port %d" % (os.getcwd(), port)
+    while not event.isSet():
+        httpd.handle_request()
+
+class Composer(object):
+    ATTRS = [ 'outputdir', 'workdir', 'srcdir', 'ostree_repo',
+              'rpmostree_cache_dir', 'os_name', 'os_pretty_name',
+              'tree_name', 'tree_file', 'arch', 'release', 'ref',
+              'yum_baseurl', 'local_overrides', 'local_http_port',
+            ]
+
+    def __init__(self, configfile, release, selfdir='.'):
+        self._repo = None
+        defaults = { 'workdir': os.getcwd(),
+                     'srcdir':  os.path.join(selfdir, '..'),
+                     'rpmostree_cache_dir': os.path.join(os.getcwd(), release, 'cache'),
+                     'yum_baseurl': None,
+                     'local_overrides': None,
+                     'local_http_port': '8000',
+                   }
+
+        settings = configparser.ConfigParser()
+        settings.read(configfile)
+        for attr in self.ATTRS:
+            setattr(self, attr, settings.get(release, attr, 0, defaults))
+
+        self.local_http_port = int(self.local_http_port)
+
+        if not self.yum_baseurl:
+            if self.release in [ '21', 'rawhide' ]:
+                self.yum_baseurl = 'http://download.fedoraproject.org/pub/fedora/linux/development/%s/%s/os/' % (self.release, self.arch)
+            else:
+                self.yum_baseurl = 'http://download.fedoraproject.org/pub/fedora/linux/releases/%s/%s/os/' % (self.release, self.arch)
+
+        return
+
+    @property
+    def repo(self):
+        if self._repo is None:
+            self._repo = OSTree.Repo(path=Gio.File.new_for_path(self.ostree_repo))
+            self._repo.open(None)
+        return self._repo
+
+    def show_config(self):
+        print "\n".join([ "%s=%s" % (x, str(getattr(self, x))) for x in self.ATTRS ])
+
+    def compose_tree(self):
+        # XXX: rpm-ostree should be handling this, I think
+        if not os.path.exists(self.rpmostree_cache_dir):
+            os.makedirs(self.rpmostree_cache_dir)
+        _,origrev = self.repo.resolve_rev(self.ref, True)
+        subprocess.check_call(['rpm-ostree', 'compose', 'tree',
+                               '--repo=' + self.ostree_repo,
+                               '--cachedir=' + self.rpmostree_cache_dir,
+                               '%s/%s-%s.json' % (self.srcdir, self.os_name,
+                                                  self.tree_name)])
+        _,newrev = self.repo.resolve_rev(self.ref, True)
+        return (origrev, newrev)
+
+    def create_disks(self):
+        # subprocess.check_call([selfdir + '/create-disks'])
+        [res,rev] = self.repo.resolve_rev(self.ref, False)
+        [res,commit] = self.repo.load_variant(OSTree.ObjectType.COMMIT, rev)
+
+        commitdate = GLib.DateTime.new_from_unix_utc(OSTree.commit_get_timestamp(commit)).format("%c")
+        print commitdate
+        # XXX - Define this somewhere?
+        imageoutputdir=os.path.join(self.outputdir, 'images')
+
+        imagedir = os.path.join(imageoutputdir, rev[:8])
+        if not os.path.exists(imagedir):
+            os.makedirs(imagedir)
+
+        # Ick
+        tmpdir = tempfile.mkdtemp('', 'atomic')
+        os.chdir(tmpdir)
+        # guestfs runs qemu with reduced privileges apparently, so chmod a+rx
+        os.chmod(tmpdir, os.stat(tmpdir).st_mode | 0555)
+        imagestmpdir = os.path.join(tmpdir, 'images')
+        os.makedirs(imagestmpdir)
+
+        imgtargetinstaller=os.path.join(imagestmpdir, 'install', '%s-installer.iso' % self.os_name)
+        self.create_installer_image(tmpdir, imgtargetinstaller)
+
+        # imgtargetbase=os.path.join(imagestmpdir, self.os_name + '.qcow2')
+        imgtargetcloud=os.path.join(imagestmpdir, 'cloud', '%s.qcow2' % self.os_name)
+        self.create_cloud_image(tmpdir, imgtargetcloud) # , imgtargetbase)
+
+        # imgtargetvagrantlibvirt=os.path.join(imagestmpdir, 'vagrant-libvirt', '%s.box' % self.os_name)
+        # create_vagrant_image()
+
+    def create_installer_image(self, tmpdir, target):
+        lorax_opts = []
+        if self.local_overrides:
+            lorax_opts.extend([ '-s', self.local_overrides ])
+        http_proxy = os.environ.get('http_proxy')
+        if http_proxy:
+            lorax_opts.extend([ '--proxy', http_proxy ])
+
+        os.makedirs(os.path.join(tmpdir, 'lorax-out'))
+        # XXX -- Really necessary?
+        os.chdir(os.path.join(tmpdir, 'lorax-out'))
+        subprocess.check_call(['lorax', '--nomacboot',
+                               '--add-template=%s/lorax-embed-repo.tmpl' % self.srcdir,
+                               '--add-template-var=ostree_repo=%s' % self.ostree_repo,
+                               '--add-template-var=ostree_ref=%s' % self.ref,
+                               '-p', self.os_pretty_name, '-v', self.release,
+                               '-r', self.release, '-s', self.yum_baseurl,
+                              ] + lorax_opts + [ '%s/lorax' % tmpdir ])
+        os.makedirs(os.path.dirname(target))
+        os.rename('lorax/images/boot.iso', target)
+
+    def create_cloud_image(self, tmpdir, target):
+        targetdir = os.path.dirname(target)
+        if not os.path.exists(targetdir):
+            os.makedirs(targetdir)
+        # TODO: Pull kickstart from separate git repo
+        kickstart = open(os.path.join(self.srcdir, 'fedora-%s-cloud-atomic.ks' % self.release)).read()
+        param_fd, param_file = tempfile.mkstemp('', 'imgfac-params')
+
+        parameters =  { "install_script": kickstart, "generate_icicle": False }
+        param = os.fdopen(param_fd, 'w')
+        param.write(json.dumps(parameters))
+        param.close()
+
+        os.chdir(os.path.join(self.ostree_repo, '..'))
+        self.start_http_server()
+        subprocess.check_call(['imagefactory', 'base_image',
+                               os.path.join(self.srcdir,
+                                            'fedora-%s.tdl' % self.release),
+                               '--parameters', param_file,
+                              ])
+        self.stop_http_server()
+        return
+
+
+    def start_http_server(self):
+        setattr(self, '_event', threading.Event())
+        t = threading.Thread(target=http_srv,
+                             args=(self.outputdir, self.local_http_port, self._event),
+                             name='http')
+        t.daemon = True
+        t.start()
+
+    def stop_http_server(self):
+        # XXX handle exceptions
+        http_thread = [ x for x in threading.enumerate() if x.name == 'http' ][0]
+        self._event.set()
+        print "Stopping HTTP server"
+        dummyread = urllib.urlopen('http://localhost:%d' % self.local_http_port)
+        print "Waiting for HTTP thread to exit"
+        http_thread.join()
+
+
+## End Composer
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Compose OSTree trees and build images.')
+    parser.add_argument('-c', '--config', type=str, default='./config.ini', help='Path to config file')
+    parser.add_argument('-r', '--release', type=str, default='rawhide', help='Release to compose (references a config file section)')
+    parser.add_argument('-i', '--images-only', action='store_true', help='Skip tree compose.  Only build images')
+    parser.add_argument('-v', '--verbose', action='store_true', help='verbose output')
+    args = parser.parse_args()
+
+    selfdir=os.path.dirname(sys.argv[0])
+
+    composer = Composer(args.config, args.release, selfdir)
+    composer.show_config()
+
+    if not args.images_only:
+        origrev, newrev = composer.compose_tree()
+    else:
+        _,newrev = composer.repo.resolve_rev(composer.ref, True)
+
+    if args.images_only or origrev != newrev:
+        print "%s => %s" % (composer.ref, newrev)
+        composer.create_disks()
+    else:
+        print "%s is unchanged at %s" % (composer.ref, origrev)
+
