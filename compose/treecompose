@@ -63,7 +63,11 @@ class Composer(object):
         settings = configparser.ConfigParser()
         settings.read(configfile)
         for attr in self.ATTRS:
-            setattr(self, attr, settings.get(release, attr, 0, defaults))
+            try:
+                val = settings.get(release, attr)
+            except configparser.NoOptionError, e:
+                val = defaults.get(attr)
+            setattr(self, attr, val)
 
         self.local_http_port = int(self.local_http_port)
 
