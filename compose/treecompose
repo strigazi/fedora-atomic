@@ -38,6 +38,11 @@ def http_srv(directory, port, event):
     while not event.isSet():
         httpd.handle_request()
 
+def run_sync(args):
+    """Wraps subprocess.check_call(), logging the command line too."""
+    print "Running: %s" % (subprocess.list2cmdline(args), )
+    subprocess.check_call(args)
+
 class Composer(object):
     ATTRS = [ 'outputdir', 'workdir', 'srcdir', 'ostree_repo',
               'rpmostree_cache_dir', 'os_name', 'os_pretty_name',
@@ -136,13 +141,13 @@ class Composer(object):
         os.makedirs(os.path.join(tmpdir, 'lorax-out'))
         # XXX -- Really necessary?
         os.chdir(os.path.join(tmpdir, 'lorax-out'))
-        subprocess.check_call(['lorax', '--nomacboot',
-                               '--add-template=%s/lorax-embed-repo.tmpl' % self.srcdir,
-                               '--add-template-var=ostree_repo=%s' % self.ostree_repo,
-                               '--add-template-var=ostree_ref=%s' % self.ref,
-                               '-p', self.os_pretty_name, '-v', self.release,
-                               '-r', self.release, '-s', self.yum_baseurl,
-                              ] + lorax_opts + [ '%s/lorax' % tmpdir ])
+        run_sync(['lorax', '--nomacboot',
+                '--add-template=%s/lorax-embed-repo.tmpl' % self.srcdir,
+                '--add-template-var=ostree_repo=%s' % self.ostree_repo,
+                '--add-template-var=ostree_ref=%s' % self.ref,
+                '-p', self.os_pretty_name, '-v', self.release,
+                '-r', self.release, '-s', self.yum_baseurl,
+              ] + lorax_opts + [ '%s/lorax' % tmpdir ])
         os.makedirs(os.path.dirname(target))
         os.rename('lorax/images/boot.iso', target)
 
