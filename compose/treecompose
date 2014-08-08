@@ -102,7 +102,7 @@ class Composer(object):
         _,newrev = self.repo.resolve_rev(self.ref, True)
         return (origrev, newrev)
 
-    def create_disks(self):
+    def create_disks(self, tasks):
         # subprocess.check_call([selfdir + '/create-disks'])
         [res,rev] = self.repo.resolve_rev(self.ref, False)
         [res,commit] = self.repo.load_variant(OSTree.ObjectType.COMMIT, rev)
@@ -124,12 +124,14 @@ class Composer(object):
         imagestmpdir = os.path.join(tmpdir, 'images')
         os.makedirs(imagestmpdir)
 
-        imgtargetinstaller=os.path.join(imagestmpdir, 'install', '%s-installer.iso' % self.os_name)
-        self.create_installer_image(tmpdir, imgtargetinstaller)
+        if 'installer' in tasks:
+            imgtargetinstaller=os.path.join(imagestmpdir, 'install', '%s-installer.iso' % self.os_name)
+            self.create_installer_image(tmpdir, imgtargetinstaller)
 
-        # imgtargetbase=os.path.join(imagestmpdir, self.os_name + '.qcow2')
-        imgtargetcloud=os.path.join(imagestmpdir, 'cloud', '%s.qcow2' % self.os_name)
-        self.create_cloud_image(tmpdir, imgtargetcloud) # , imgtargetbase)
+        if 'cloud' in tasks:
+            # imgtargetbase=os.path.join(imagestmpdir, self.os_name + '.qcow2')
+            imgtargetcloud=os.path.join(imagestmpdir, 'cloud', '%s.qcow2' % self.os_name)
+            self.create_cloud_image(tmpdir, imgtargetcloud) # , imgtargetbase)
 
         # imgtargetvagrantlibvirt=os.path.join(imagestmpdir, 'vagrant-libvirt', '%s.box' % self.os_name)
         # create_vagrant_image()
@@ -205,7 +207,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Compose OSTree trees and build images.')
     parser.add_argument('-c', '--config', type=str, default='./config.ini', help='Path to config file')
     parser.add_argument('-r', '--release', type=str, default='rawhide', help='Release to compose (references a config file section)')
-    parser.add_argument('-i', '--images-only', action='store_true', help='Skip tree compose.  Only build images')
+    parser.add_argument('-t', '--task', action='append', help='Perform only these steps', default=None)
     parser.add_argument('-v', '--verbose', action='store_true', help='verbose output')
     args = parser.parse_args()
 
@@ -214,14 +216,18 @@ if __name__ == '__main__':
     composer = Composer(args.config, args.release, selfdir)
     composer.show_config()
 
-    if not args.images_only:
+    if args.task is None:
+        args.task = ['tree', 'cloud', 'installer']
+
+    if 'tree' in args.task:
         origrev, newrev = composer.compose_tree()
     else:
+        origrev = None
         _,newrev = composer.repo.resolve_rev(composer.ref, True)
 
-    if args.images_only or origrev != newrev:
+    if origrev != newrev:
         print "%s => %s" % (composer.ref, newrev)
-        composer.create_disks()
+        composer.create_disks(args.task)
     else:
         print "%s is unchanged at %s" % (composer.ref, origrev)
 
