@@ -38,10 +38,10 @@ def http_srv(directory, port, event):
     while not event.isSet():
         httpd.handle_request()
 
-def run_sync(args):
+def run_sync(args, **kwargs):
     """Wraps subprocess.check_call(), logging the command line too."""
     print "Running: %s" % (subprocess.list2cmdline(args), )
-    subprocess.check_call(args)
+    subprocess.check_call(args, **kwargs)
 
 class Composer(object):
     ATTRS = [ 'outputdir', 'workdir', 'srcdir', 'ostree_repo',
