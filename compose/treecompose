@@ -142,18 +142,20 @@ class Composer(object):
         if http_proxy:
             lorax_opts.extend([ '--proxy', http_proxy ])
 
-        os.makedirs(os.path.join(tmpdir, 'lorax-out'))
-        # XXX -- Really necessary?
-        os.chdir(os.path.join(tmpdir, 'lorax-out'))
+        lorax_workdir = os.path.join(tmpdir, 'lorax')
+        os.makedirs(lorax_workdir)
         run_sync(['lorax', '--nomacboot',
-                '--add-template=%s/lorax-embed-repo.tmpl' % self.srcdir,
-                '--add-template-var=ostree_repo=%s' % self.ostree_repo,
-                '--add-template-var=ostree_ref=%s' % self.ref,
-                '-p', self.os_pretty_name, '-v', self.release,
-                '-r', self.release, '-s', self.yum_baseurl,
-              ] + lorax_opts + [ '%s/lorax' % tmpdir ])
+                  '--add-template=%s/lorax-embed-repo.tmpl' % self.srcdir,
+                  '--add-template-var=ostree_repo=%s' % self.ostree_repo,
+                  '--add-template-var=ostree_ref=%s' % self.ref,
+                  '-p', self.os_pretty_name, '-v', self.release,
+                  '-r', self.release, '-s', self.yum_baseurl,
+                  ] + lorax_opts + ['output'],
+                 cwd=lorax_workdir)
         os.makedirs(os.path.dirname(target))
-        os.rename('lorax/images/boot.iso', target)
+        # Right now we only take the boot.iso (which is really
+        # installer.iso since we used a template to inject data)
+        os.rename(lorax_workdir + '/output/images/boot.iso', target)
 
     def create_cloud_image(self, tmpdir, target):
         targetdir = os.path.dirname(target)
