@@ -31,13 +31,6 @@ import BaseHTTPServer
 import threading
 import urllib
 
-def http_srv(directory, port, event):
-    handler = SimpleHTTPServer.SimpleHTTPRequestHandler
-    httpd = BaseHTTPServer.HTTPServer(('', port), handler)
-    print "Serving directory '%s' on port %d" % (os.getcwd(), port)
-    while not event.isSet():
-        httpd.handle_request()
-
 def run_sync(args, **kwargs):
     """Wraps subprocess.check_call(), logging the command line too."""
     print "Running: %s" % (subprocess.list2cmdline(args), )
@@ -47,7 +40,7 @@ class Composer(object):
     ATTRS = [ 'outputdir', 'workdir', 'srcdir', 'ostree_repo',
               'rpmostree_cache_dir', 'os_name', 'os_pretty_name',
               'tree_name', 'tree_file', 'arch', 'release', 'ref',
-              'yum_baseurl', 'local_overrides', 'local_http_port',
+              'yum_baseurl', 'local_overrides',
             ]
 
     def __init__(self, configfile, release, selfdir='.'):
@@ -57,7 +50,6 @@ class Composer(object):
                      'rpmostree_cache_dir': os.path.join(os.getcwd(), release, 'cache'),
                      'yum_baseurl': None,
                      'local_overrides': None,
-                     'local_http_port': '8000',
                    }
 
         settings = configparser.ConfigParser()
@@ -68,8 +60,6 @@ class Composer(object):
             except configparser.NoOptionError, e:
                 val = defaults.get(attr)
             setattr(self, attr, val)
-
-        self.local_http_port = int(self.local_http_port)
 
         if not self.yum_baseurl:
             if self.release in [ '21', 'rawhide' ]:
@@ -163,8 +153,17 @@ class Composer(object):
         targetdir = os.path.dirname(target)
         if not os.path.exists(targetdir):
             os.makedirs(targetdir)
+
+        port_file_path = tmpdir + '/repo-port'
+        subprocess.check_call(['ostree', 'trivial-httpd', '--autoexit', '--daemonize', '--port-file', port_file_path],
+                                         cwd=self.ostree_repo + '/..')
+
+        httpd_port = open(port_file_path).read().strip()
+        print "trivial httpd port=%s" % (httpd_port, )
+
         # TODO: Pull kickstart from separate git repo
         kickstart = open(os.path.join(self.srcdir, 'fedora-%s-cloud-atomic.ks' % self.release)).read()
+        kickstart = kickstart.replace('@OSTREE_PORT@', httpd_port)
         param_fd, param_file = tempfile.mkstemp('', 'imgfac-params')
 
         parameters =  { "install_script": kickstart, "generate_icicle": False }
@@ -172,34 +171,11 @@ class Composer(object):
         param.write(json.dumps(parameters))
         param.close()
 
-        os.chdir(os.path.join(self.ostree_repo, '..'))
-        self.start_http_server()
         subprocess.check_call(['imagefactory', 'base_image',
                                os.path.join(self.srcdir,
                                             'fedora-%s.tdl' % self.release),
                                '--parameters', param_file,
-                              ])
-        self.stop_http_server()
-        return
-
-
-    def start_http_server(self):
-        setattr(self, '_event', threading.Event())
-        t = threading.Thread(target=http_srv,
-                             args=(self.outputdir, self.local_http_port, self._event),
-                             name='http')
-        t.daemon = True
-        t.start()
-
-    def stop_http_server(self):
-        # XXX handle exceptions
-        http_thread = [ x for x in threading.enumerate() if x.name == 'http' ][0]
-        self._event.set()
-        print "Stopping HTTP server"
-        dummyread = urllib.urlopen('http://localhost:%d' % self.local_http_port)
-        print "Waiting for HTTP thread to exit"
-        http_thread.join()
-
+        ])
 
 ## End Composer
 
