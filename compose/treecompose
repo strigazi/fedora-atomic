@@ -119,12 +119,16 @@ class Composer(object):
             self.create_installer_image(tmpdir, imgtargetinstaller)
 
         if 'cloud' in tasks:
-            # imgtargetbase=os.path.join(imagestmpdir, self.os_name + '.qcow2')
             imgtargetcloud=os.path.join(imagestmpdir, 'cloud', '%s.qcow2' % self.os_name)
-            self.create_cloud_image(tmpdir, imgtargetcloud) # , imgtargetbase)
+            self.create_cloud_image(tmpdir, imgtargetcloud,
+                                    os.path.join(self.srcdir, 'fedora-%s-cloud-atomic.ks' % self.release))
 
-        # imgtargetvagrantlibvirt=os.path.join(imagestmpdir, 'vagrant-libvirt', '%s.box' % self.os_name)
-        # create_vagrant_image()
+        if 'vagrant' in tasks:
+            imgtargetvagrant=os.path.join(imagestmpdir, 'vagrant', '%s.qcow2' % self.os_name)
+            self.create_cloud_image(tmpdir, imgtargetvagrant,
+                                    os.path.join(self.srcdir, 'fedora-%s-vagrant-atomic.ks' % self.release))
+            # TODO: Put it in a "box"
+            # imgtargetvagrantlibvirt=os.path.join(imagestmpdir, 'vagrant-libvirt', '%s.box' % self.os_name)
 
     def create_installer_image(self, tmpdir, target):
         lorax_opts = []
@@ -149,7 +153,7 @@ class Composer(object):
         # installer.iso since we used a template to inject data)
         os.rename(lorax_workdir + '/output/images/boot.iso', target)
 
-    def create_cloud_image(self, tmpdir, target):
+    def create_cloud_image(self, tmpdir, target, ksfile):
         targetdir = os.path.dirname(target)
         if not os.path.exists(targetdir):
             os.makedirs(targetdir)
@@ -162,7 +166,7 @@ class Composer(object):
         print "trivial httpd port=%s" % (httpd_port, )
 
         # TODO: Pull kickstart from separate git repo
-        kickstart = open(os.path.join(self.srcdir, 'fedora-%s-cloud-atomic.ks' % self.release)).read()
+        kickstart = open(ksfile).read()
         kickstart = kickstart.replace('@OSTREE_PORT@', httpd_port)
         param_fd, param_file = tempfile.mkstemp('', 'imgfac-params')
 
@@ -193,7 +197,7 @@ if __name__ == '__main__':
     composer.show_config()
 
     if args.task is None:
-        args.task = ['tree', 'cloud', 'installer']
+        args.task = ['tree', 'cloud', 'installer', 'vagrant']
 
     if 'tree' in args.task:
         origrev, newrev = composer.compose_tree()
