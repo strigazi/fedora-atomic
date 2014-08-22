@@ -12,18 +12,17 @@ timezone --utc Etc/UTC
 auth --useshadow --enablemd5
 selinux --enforcing
 rootpw --lock --iscrypted locked
-user --name=vagrant --password=vagrant --groups=wheel
+user --name=vagrant --password=vagrant --groups=wheel,vagrant
 
 firewall --disabled
 
 bootloader --timeout=1 --append="no_timer_check console=tty1 console=ttyS0,115200n8" --extlinux
 
 network --bootproto=dhcp --device=eth0 --activate --onboot=on
-services --enabled=network,sshd,rsyslog
+services --enabled=network,sshd,rsyslog --disabled=cloud-config,cloud-init,cloud-init-local,cloud-final
 
 zerombr
 clearpart --all
-# part / --size 3000 --fstype ext4
 autopart
 
 # Equivalent of %include fedora-repo.ks
