@@ -25,12 +25,6 @@ import subprocess
 from gi.repository import Gio, OSTree, GLib
 from iniparse import configparser
 
-# For our http server thread
-import SimpleHTTPServer
-import BaseHTTPServer
-import threading
-import urllib
-
 def run_sync(args, **kwargs):
     """Wraps subprocess.check_call(), logging the command line too."""
     print "Running: %s" % (subprocess.list2cmdline(args), )
