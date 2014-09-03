@@ -25,10 +25,92 @@ import subprocess
 from gi.repository import Gio, OSTree, GLib
 from iniparse import configparser
 
+# For ImageFactory builds
+from imgfac.BuildDispatcher import BuildDispatcher
+from imgfac.PluginManager import PluginManager
+from imgfac.ApplicationConfiguration import ApplicationConfiguration
+import logging
+
 def run_sync(args, **kwargs):
     """Wraps subprocess.check_call(), logging the command line too."""
     print "Running: %s" % (subprocess.list2cmdline(args), )
     subprocess.check_call(args, **kwargs)
+
+class ImgBuilder(object):
+    '''
+    Abstract class from which specific builder inherit.
+    This is mostly because we want to allow for direct calls to imagefactory,
+    but also calls to koji.  In one case, we need to generate a TDL; in the
+    other, we provide the parameters and let the system construct it.
+    '''
+
+    def __init__(self, *args, **kwargs):
+        pass
+
+    def build(self):
+        '''
+        Trigger a build.  Return something useful like a build id, status, etc.
+        '''
+        raise NotImplementedError
+
+    def download(self, dest):
+        '''
+        Copy/download artifacts to a destination
+        '''
+        raise NotImplementedError
+
+class ImgFacBuilder(ImgBuilder):
+    def __init__(self, *args, **kwargs):
+        config = json.loads(open('/etc/imagefactory/imagefactory.conf').read())
+        config['plugins'] = '/etc/imagefactory/plugins.d'
+        config['timeout'] = 3600
+        ApplicationConfiguration(configuration=config)
+        plugin_mgr = PluginManager('/etc/imagefactory/plugins.d')
+        plugin_mgr.load()
+
+        logfile = '/tmp/imgfaclog'
+
+        self.fhandler = logging.FileHandler(logfile)
+        self.tlog = logging.getLogger()
+        self.tlog.setLevel(logging.DEBUG)
+        self.tlog.addHandler(self.fhandler)
+
+        pass
+
+    def build(self, template=None, parameters=None):
+        bd = BuildDispatcher()
+        builder = bd.builder_for_base_image(template=template,
+                                            parameters=parameters)
+        print json.dumps(builder.app_config)
+        image = builder.base_image
+        thread = builder.base_thread
+        for key in image.metadata():
+            print "%s %s" % (key, getattr(image, key, None))
+
+        thread.join()
+
+        print "STATUS: %s" % image.status
+        print "UUID: %s" % image.identifier
+        return
+
+    def download(self):
+        pass
+
+class KojiBuilder(ImgBuilder):
+    def __init__(self, **kwargs):
+        # sort of
+        # server = kwargs.pop('server')
+        # self.session = koji.ClientSession(server, kwargs)
+        pass
+
+    def build(self):
+        # TODO: populate buildinfo
+        # self.session.createImageBuild(buildinfo)
+        pass
+
+    def download(self):
+        pass
+
 
 class Composer(object):
     ATTRS = [ 'outputdir', 'workdir', 'srcdir', 'ostree_repo',
@@ -162,18 +244,21 @@ class Composer(object):
         # TODO: Pull kickstart from separate git repo
         kickstart = open(ksfile).read()
         kickstart = kickstart.replace('@OSTREE_PORT@', httpd_port)
-        param_fd, param_file = tempfile.mkstemp('', 'imgfac-params')
 
-        parameters =  { "install_script": kickstart, "generate_icicle": False }
-        param = os.fdopen(param_fd, 'w')
-        param.write(json.dumps(parameters))
-        param.close()
+        parameters =  { "install_script": kickstart, 
+                        "generate_icicle": False,
+                      }
 
-        subprocess.check_call(['imagefactory', 'base_image',
-                               os.path.join(self.srcdir,
-                                            'fedora-%s.tdl' % self.release),
-                               '--parameters', param_file,
-        ])
+        self.builder.build(template=open(os.path.join(self.srcdir, 'fedora-%s.tdl' % self.release)).read(),
+                  parameters=parameters)
+
+    @property
+    def builder(self):
+        # TODO: option to switch to koji builder
+        if True:
+            return ImgFacBuilder()
+        else:
+            return KojiBuilder()
 
 ## End Composer
 
