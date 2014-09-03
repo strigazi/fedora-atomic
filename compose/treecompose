@@ -21,6 +21,7 @@ import os
 import sys
 import tempfile
 import argparse
+import shutil
 import subprocess
 from gi.repository import Gio, OSTree, GLib
 from iniparse import configparser
@@ -89,9 +90,9 @@ class ImgFacBuilder(ImgBuilder):
 
         thread.join()
 
-        print "STATUS: %s" % image.status
-        print "UUID: %s" % image.identifier
-        return
+        if image.status != "COMPLETE":
+            # Give useful error info
+        return image.data
 
     def download(self):
         pass
@@ -249,8 +250,10 @@ class Composer(object):
                         "generate_icicle": False,
                       }
 
-        self.builder.build(template=open(os.path.join(self.srcdir, 'fedora-%s.tdl' % self.release)).read(),
-                  parameters=parameters)
+        image_path = self.builder.build(template=open(os.path.join(self.srcdir, 'fedora-%s.tdl' % self.release)).read(),
+                                        parameters=parameters)
+        shutil.copyfile(image_path, target)
+
 
     @property
     def builder(self):
