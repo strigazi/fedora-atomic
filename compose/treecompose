@@ -69,7 +69,7 @@ class ImgFacBuilder(ImgBuilder):
         plugin_mgr = PluginManager('/etc/imagefactory/plugins.d')
         plugin_mgr.load()
 
-        logfile = '/tmp/imgfaclog'
+        logfile = os.path.join(kwargs['workdir'], 'imgfac.log')
 
         self.fhandler = logging.FileHandler(logfile)
         self.tlog = logging.getLogger()
@@ -91,7 +91,7 @@ class ImgFacBuilder(ImgBuilder):
         thread.join()
 
         if image.status != "COMPLETE":
-            # Give useful error info
+            raise Error("Failed image status: " + image.status)
         return image.data
 
     def download(self):
@@ -122,7 +122,7 @@ class Composer(object):
 
     def __init__(self, configfile, release, selfdir='.'):
         self._repo = None
-        defaults = { 'workdir': os.getcwd(),
+        defaults = { 'workdir': None,
                      'srcdir':  os.path.join(selfdir, '..'),
                      'rpmostree_cache_dir': os.path.join(os.getcwd(), release, 'cache'),
                      'yum_baseurl': None,
@@ -143,6 +143,11 @@ class Composer(object):
                 self.yum_baseurl = 'http://download.fedoraproject.org/pub/fedora/linux/development/%s/%s/os/' % (self.release, self.arch)
             else:
                 self.yum_baseurl = 'http://download.fedoraproject.org/pub/fedora/linux/releases/%s/%s/os/' % (self.release, self.arch)
+
+        self.workdir_is_tmp = False
+        if self.workdir is None:
+            self.workdir = tempfile.mkdtemp('.tmp', 'atomic-treecompose')
+            self.workdir_is_tmp = True
 
         return
 
@@ -183,29 +188,34 @@ class Composer(object):
         if not os.path.exists(imagedir):
             os.makedirs(imagedir)
 
-        # Ick
-        tmpdir = tempfile.mkdtemp('', 'atomic')
-        os.chdir(tmpdir)
-        # guestfs runs qemu with reduced privileges apparently, so chmod a+rx
-        os.chmod(tmpdir, os.stat(tmpdir).st_mode | 0555)
-        imagestmpdir = os.path.join(tmpdir, 'images')
-        os.makedirs(imagestmpdir)
+        imagestmpdir = os.path.join(self.workdir, 'images')
+        os.mkdir(imagestmpdir)
+
+        generated = []
 
         if 'installer' in tasks:
             imgtargetinstaller=os.path.join(imagestmpdir, 'install', '%s-installer.iso' % self.os_name)
-            self.create_installer_image(tmpdir, imgtargetinstaller)
+            self.create_installer_image(self.workdir, imgtargetinstaller)
+            generated.append(imgtargetinstaller)
 
         if 'cloud' in tasks:
             imgtargetcloud=os.path.join(imagestmpdir, 'cloud', '%s.qcow2' % self.os_name)
-            self.create_cloud_image(tmpdir, imgtargetcloud,
+            self.create_cloud_image(self.workdir, imgtargetcloud,
                                     os.path.join(self.srcdir, 'fedora-%s-cloud-atomic.ks' % self.release))
+            generated.append(imgtargetcloud)
 
         if 'vagrant' in tasks:
             imgtargetvagrant=os.path.join(imagestmpdir, 'vagrant', '%s.qcow2' % self.os_name)
-            self.create_cloud_image(tmpdir, imgtargetvagrant,
+            self.create_cloud_image(self.workdir, imgtargetvagrant,
                                     os.path.join(self.srcdir, 'fedora-%s-vagrant-atomic.ks' % self.release))
+            generated.append(imgtargetvagrant)
             # TODO: Put it in a "box"
             # imgtargetvagrantlibvirt=os.path.join(imagestmpdir, 'vagrant-libvirt', '%s.box' % self.os_name)
+
+        for f in generated:
+            destpath = os.path.join(imagedir, os.path.basename(f))
+            print "Created: " + destpath
+            shutil.move(f, destpath)
 
     def create_installer_image(self, tmpdir, target):
         lorax_opts = []
@@ -253,13 +263,13 @@ class Composer(object):
         image_path = self.builder.build(template=open(os.path.join(self.srcdir, 'fedora-%s.tdl' % self.release)).read(),
                                         parameters=parameters)
         shutil.copyfile(image_path, target)
-
+        print "Created: " + target
 
     @property
     def builder(self):
         # TODO: option to switch to koji builder
         if True:
-            return ImgFacBuilder()
+            return ImgFacBuilder(workdir=self.workdir)
         else:
             return KojiBuilder()
 
@@ -292,4 +302,7 @@ if __name__ == '__main__':
         composer.create_disks(args.task)
     else:
         print "%s is unchanged at %s" % (composer.ref, origrev)
+
+    if self.workdir_is_tmp:
+        shutil.rmtree(self.workdir)
 

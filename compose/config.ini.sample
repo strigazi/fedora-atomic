@@ -1,7 +1,7 @@
 [DEFAULT]
 
 outputdir   = /srv/ostree/%(release)s
-# workdir     = os.getcwd
+# workdir     = os.getcwd()
 # srcdir      = os.path.join(os.path.dirname(sys.argv[0], '..')
 # rpmostree_cache_dir = %(workdir)s/%(release)s/cache
 ostree_repo = %(outputdir)s/repo
