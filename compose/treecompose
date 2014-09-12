@@ -273,6 +273,10 @@ class Composer(object):
         else:
             return KojiBuilder()
 
+    def cleanup(self):
+        if self.workdir_is_tmp:
+            shutil.rmtree(self.workdir)
+
 ## End Composer
 
 if __name__ == '__main__':
@@ -303,6 +307,4 @@ if __name__ == '__main__':
     else:
         print "%s is unchanged at %s" % (composer.ref, origrev)
 
-    if self.workdir_is_tmp:
-        shutil.rmtree(self.workdir)
-
+    composer.cleanup()
