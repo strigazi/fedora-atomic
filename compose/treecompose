@@ -23,6 +23,7 @@ import tempfile
 import argparse
 import shutil
 import subprocess
+import distutils.spawn
 from gi.repository import Gio, OSTree, GLib
 from iniparse import configparser
 
@@ -31,6 +32,12 @@ from imgfac.BuildDispatcher import BuildDispatcher
 from imgfac.PluginManager import PluginManager
 from imgfac.ApplicationConfiguration import ApplicationConfiguration
 import logging
+
+def fail_msg(msg):
+    if False:
+        raise Exception(msg)
+    print >>sys.stderr, msg
+    sys.exit(1)
 
 def run_sync(args, **kwargs):
     """Wraps subprocess.check_call(), logging the command line too."""
@@ -91,7 +98,7 @@ class ImgFacBuilder(ImgBuilder):
         thread.join()
 
         if image.status != "COMPLETE":
-            raise Exception("Failed image status: " + image.status)
+            fail_msg("Failed image status: " + image.status)
         return image.data
 
     def download(self):
@@ -117,7 +124,8 @@ class Composer(object):
     ATTRS = [ 'outputdir', 'workdir', 'srcdir', 'ostree_repo',
               'rpmostree_cache_dir', 'os_name', 'os_pretty_name',
               'tree_name', 'tree_file', 'arch', 'release', 'ref',
-              'yum_baseurl', 'local_overrides',
+              'yum_baseurl', 'local_overrides', 'http_proxy',
+              'cmd_ostree', 'cmd_rpm_ostree', 'cmd_lorax', 
             ]
 
     def __init__(self, configfile, release, selfdir='.'):
@@ -127,7 +135,13 @@ class Composer(object):
                      'rpmostree_cache_dir': os.path.join(os.getcwd(), release, 'cache'),
                      'yum_baseurl': None,
                      'local_overrides': None,
+                     'cmd_ostree'     : 'ostree',
+                     'cmd_rpm_ostree' : 'rpm-ostree',
+                     'cmd_lorax'      : 'lorax',
                    }
+
+        if not os.path.exists(configfile):
+            fail_msg("No config file: " + configfile)
 
         settings = configparser.ConfigParser()
         settings.read(configfile)
@@ -144,15 +158,32 @@ class Composer(object):
             else:
                 self.yum_baseurl = 'http://download.fedoraproject.org/pub/fedora/linux/releases/%s/%s/os/' % (self.release, self.arch)
 
+        if self.http_proxy:
+            os.environ['http_proxy'] = self.http_proxy
+
         self.workdir_is_tmp = False
         if self.workdir is None:
             self.workdir = tempfile.mkdtemp('.tmp', 'atomic-treecompose')
             self.workdir_is_tmp = True
 
+        for cmd in (self.cmd_ostree, self.cmd_rpm_ostree, self.cmd_lorax):
+            if os.path.isfile(cmd):
+                continue
+            if distutils.spawn.find_executable(cmd):
+                continue
+            fail_msg("Command not found: " + cmd)
+
         return
 
     @property
     def repo(self):
+        if not os.path.exists(self.ostree_repo):
+            #  Remove the cache, if the repo. is gone ... or rpm-ostree is very
+            # confused.
+            shutil.rmtree(self.rpmostree_cache_dir)
+            os.makedirs(self.ostree_repo)
+            subprocess.check_call([self.cmd_ostree, 'init',
+                                   "--repo="+self.ostree_repo])
         if self._repo is None:
             self._repo = OSTree.Repo(path=Gio.File.new_for_path(self.ostree_repo))
             self._repo.open(None)
@@ -166,7 +197,7 @@ class Composer(object):
         if not os.path.exists(self.rpmostree_cache_dir):
             os.makedirs(self.rpmostree_cache_dir)
         _,origrev = self.repo.resolve_rev(self.ref, True)
-        subprocess.check_call(['rpm-ostree', 'compose', 'tree',
+        subprocess.check_call([self.cmd_rpm_ostree, 'compose', 'tree',
                                '--repo=' + self.ostree_repo,
                                '--cachedir=' + self.rpmostree_cache_dir,
                                '%s/%s-%s.json' % (self.srcdir, self.os_name,
@@ -227,7 +258,7 @@ class Composer(object):
 
         lorax_workdir = os.path.join(tmpdir, 'lorax')
         os.makedirs(lorax_workdir)
-        run_sync(['lorax', '--nomacboot',
+        run_sync([self.cmd_lorax, '--nomacboot',
                   '--add-template=%s/lorax-embed-repo.tmpl' % self.srcdir,
                   '--add-template-var=ostree_repo=%s' % self.ostree_repo,
                   '--add-template-var=ostree_ref=%s' % self.ref,
@@ -246,8 +277,10 @@ class Composer(object):
             os.makedirs(targetdir)
 
         port_file_path = tmpdir + '/repo-port'
-        subprocess.check_call(['ostree', 'trivial-httpd', '--autoexit', '--daemonize', '--port-file', port_file_path],
-                                         cwd=self.ostree_repo + '/..')
+        subprocess.check_call([self.cmd_ostree,
+                               'trivial-httpd', '--autoexit', '--daemonize',
+                               '--port-file', port_file_path],
+                              cwd=self.ostree_repo + '/..')
 
         httpd_port = open(port_file_path).read().strip()
         print "trivial httpd port=%s" % (httpd_port, )
