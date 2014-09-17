@@ -258,8 +258,10 @@ class Composer(object):
 
         lorax_workdir = os.path.join(tmpdir, 'lorax')
         os.makedirs(lorax_workdir)
+        # Lorax doesn't deal well with loading templates from relative paths
+        abs_srcdir = os.path.realpath(self.srcdir)
         run_sync([self.cmd_lorax, '--nomacboot',
-                  '--add-template=%s/lorax-embed-repo.tmpl' % self.srcdir,
+                  '--add-template=%s/lorax-embed-repo.tmpl' % abs_srcdir,
                   '--add-template-var=ostree_repo=%s' % self.ostree_repo,
                   '--add-template-var=ostree_ref=%s' % self.ref,
                   '-p', self.os_pretty_name, '-v', self.release,
