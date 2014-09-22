@@ -39,6 +39,11 @@ def fail_msg(msg):
     print >>sys.stderr, msg
     sys.exit(1)
 
+def print_header(tasks):
+    print "=" * 78
+    print tasks
+    print "=" * 78
+
 def run_sync(args, **kwargs):
     """Wraps subprocess.check_call(), logging the command line too."""
     print "Running: %s" % (subprocess.list2cmdline(args), )
@@ -128,10 +133,11 @@ class Composer(object):
               'cmd_ostree', 'cmd_rpm_ostree', 'cmd_lorax', 
             ]
 
+    _SRCDIR = '/usr/share/rpm-ostree-compose/src'
     def __init__(self, configfile, release, selfdir='.'):
         self._repo = None
         defaults = { 'workdir': None,
-                     'srcdir':  os.path.join(selfdir, '..'),
+                     'srcdir':  self._SRCDIR,
                      'rpmostree_cache_dir': os.path.join(os.getcwd(), release, 'cache'),
                      'yum_baseurl': None,
                      'local_overrides': None,
@@ -140,6 +146,8 @@ class Composer(object):
                      'cmd_lorax'      : 'lorax',
                    }
 
+        if not os.path.exists(defaults['srcdir']):
+            defaults['srcdir'] = os.path.join(selfdir, '..')
         if not os.path.exists(configfile):
             fail_msg("No config file: " + configfile)
 
@@ -197,6 +205,7 @@ class Composer(object):
         if not os.path.exists(self.rpmostree_cache_dir):
             os.makedirs(self.rpmostree_cache_dir)
         _,origrev = self.repo.resolve_rev(self.ref, True)
+        print_header("Performing Task: tree (ostree compose)")
         subprocess.check_call([self.cmd_rpm_ostree, 'compose', 'tree',
                                '--repo=' + self.ostree_repo,
                                '--cachedir=' + self.rpmostree_cache_dir,
@@ -225,17 +234,20 @@ class Composer(object):
         generated = []
 
         if 'installer' in tasks:
+            print_header("Performing Task: installer (lorax boot.iso)")
             imgtargetinstaller=os.path.join(imagestmpdir, 'install', '%s-installer.iso' % self.os_name)
             self.create_installer_image(self.workdir, imgtargetinstaller)
             generated.append(imgtargetinstaller)
 
         if 'cloud' in tasks:
+            print_header("Performing Task: cloud (imagefactory build)")
             imgtargetcloud=os.path.join(imagestmpdir, 'cloud', '%s.qcow2' % self.os_name)
             self.create_cloud_image(self.workdir, imgtargetcloud,
                                     os.path.join(self.srcdir, 'fedora-%s-cloud-atomic.ks' % self.release))
             generated.append(imgtargetcloud)
 
         if 'vagrant' in tasks:
+            print_header("Performing Task: vagrant (imagefactory build)")
             imgtargetvagrant=os.path.join(imagestmpdir, 'vagrant', '%s.qcow2' % self.os_name)
             self.create_cloud_image(self.workdir, imgtargetvagrant,
                                     os.path.join(self.srcdir, 'fedora-%s-vagrant-atomic.ks' % self.release))
@@ -327,8 +339,15 @@ if __name__ == '__main__':
     composer = Composer(args.config, args.release, selfdir)
     composer.show_config()
 
+    all_tasks = set(['tree', 'cloud', 'installer', 'vagrant'])
     if args.task is None:
-        args.task = ['tree', 'cloud', 'installer', 'vagrant']
+        args.task = all_tasks
+    else:
+        for task in args.task:
+            if task not in all_tasks:
+                fail_msg("Not a valid task: " + task)
+
+    print_header("Performing Tasks: " + ", ".join(sorted(args.task)))
 
     if 'tree' in args.task:
         origrev, newrev = composer.compose_tree()
