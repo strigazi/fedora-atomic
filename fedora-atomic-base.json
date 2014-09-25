@@ -21,6 +21,7 @@
 		 "curl",
 		 "NetworkManager",
 		 "hostname", "initscripts", "iproute", "iputils", "less", "man-db",
+		 "sos",
 		 "openssh-clients", "openssh-server", "passwd", "plymouth",
 		 "policycoreutils", "procps-ng", "rootfiles", "rpm",
 		 "selinux-policy-targeted", "setup", "shadow-utils",
