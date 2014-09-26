@@ -9,4 +9,6 @@ runcmd ostree --repo=${root}/install/ostree pull-local --disable-fsync ${ostree_
 
 append usr/share/anaconda/interactive-defaults.ks "bootloader --timeout=3 --extlinux\n"
 append usr/share/anaconda/interactive-defaults.ks "ostreesetup --nogpg --osname=fedora-atomic-host --remote=installmedia --url=file:///install/ostree --ref=${ostree_ref}\n"
+append usr/share/anaconda/interactive-defaults.ks "services --disabled cloud-init,cloud-config,cloud-final,cloud-init-local\n"
+
 
