@@ -17,6 +17,7 @@
 		 "gnupg2",
 		 "basesystem",
 		 "bash",
+		 "xz", "gzip", "bzip2",
 		 "coreutils",
 		 "curl",
 		 "NetworkManager",
