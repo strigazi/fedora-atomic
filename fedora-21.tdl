@@ -5,7 +5,7 @@
         <version>20</version>
         <arch>x86_64</arch>
         <install type='url'>
-            <url>http://kojipkgs.fedoraproject.org/mash/rawhide-20140822/rawhide/x86_64/os/</url>
+            <url>http://dl.fedoraproject.org/pub/fedora/linux/releases/test/21-Alpha/Cloud/x86_64/os/</url>
         </install>
         <rootpw>ewwwwwww</rootpw>
     </os>
