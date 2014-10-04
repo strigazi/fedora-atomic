@@ -27,7 +27,7 @@ clearpart --all
 autopart
 
 # Equivalent of %include fedora-repo.ks
-ostreesetup --osname="@OSTREE_OSNAME@" --remote="@OSTREE_OSNAME@" --ref="@OSTREE_REF@" --url="http://192.168.122.1:@OSTREE_PORT@/repo" --nogpg
+ostreesetup --osname="@OSTREE_OSNAME@" --remote="@OSTREE_OSNAME@" --ref="@OSTREE_REF@" --url="http://192.168.122.1:@OSTREE_PORT@" --nogpg
 
 reboot
 
