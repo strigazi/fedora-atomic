@@ -18,8 +18,8 @@
 		 "setools-console",
 		 "audit",
 		 "cockpit",
-		 "geard",
+		 "kubernetes", "etcd", "cadvisor",
 		 "docker-io"],
 
-    "units": ["docker.socket", "geard.service", "cockpit.socket"]
+    "units": ["docker.socket", "cockpit.socket"]
 }
