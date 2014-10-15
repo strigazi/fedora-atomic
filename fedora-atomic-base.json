@@ -19,6 +19,7 @@
 		 "bash",
 		 "xz", "gzip", "bzip2",
 		 "coreutils",
+		 "which",
 		 "curl",
 		 "NetworkManager",
 		 "hostname", "initscripts", "iproute", "iputils", "less", "man-db",
