@@ -22,6 +22,7 @@
 		 "xz", "gzip", "bzip2",
 		 "coreutils",
 		 "which",
+                 "nfs-utils",
 		 "curl",
 		 "NetworkManager",
 		 "hostname", "initscripts", "iproute", "iputils", "less", "man-db",
