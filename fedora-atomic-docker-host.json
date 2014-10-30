@@ -22,5 +22,5 @@
 		 "kubernetes", "etcd", "cadvisor",
 		 "docker-io"],
 
-    "units": ["docker.socket", "cockpit.socket"]
+    "units": ["docker.socket", "cockpit.socket", "docker-storage-setup.service"]
 }
