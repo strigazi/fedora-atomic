@@ -23,8 +23,10 @@ services --enabled=network,sshd,rsyslog,cloud-init,cloud-init-local,cloud-config
 
 zerombr
 clearpart --all
-# part / --size 3000 --fstype ext4
-autopart
+part /boot --size=300 --fstype="xfs"
+part pv.01 --grow
+volgroup atomicos pv.01
+logvol / --size=3000 --fstype="xfs" --name=root --vgname=atomicos
 
 # Equivalent of %include fedora-repo.ks
 ostreesetup --osname="@OSTREE_OSNAME@" --remote="@OSTREE_OSNAME@" --ref="@OSTREE_REF@" --url="http://192.168.122.1:@OSTREE_PORT@" --nogpg
