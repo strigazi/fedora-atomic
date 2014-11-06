@@ -5,7 +5,6 @@
 
     "packages": ["tar",
 		 "cloud-init",
-		 "heat-cfntools",
 		 "cloud-utils-growpart",
 		 "docker-storage-setup",
 		 "rsync",
