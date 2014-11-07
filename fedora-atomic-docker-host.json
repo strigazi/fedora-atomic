@@ -12,7 +12,6 @@
 		 "man-pages",
 		 "bash-completion",
 		 "tmux",
-		 "git",
 		 "strace", "lsof", "tcpdump", "nmap-ncat",
 		 "policycoreutils-python",
 		 "setools-console",
