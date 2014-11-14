@@ -1,9 +1,35 @@
 {
-    "include": "fedora-atomic-base.json",
-
     "ref": "fedora-atomic/rawhide/x86_64/docker-host",
 
-    "packages": ["tar",
+    "repos": ["fedora-rawhide"],
+
+    "selinux": true,
+
+    "bootstrap_packages": ["filesystem"],
+
+    "packages": ["glibc", "nss-altfiles", "shadow-utils",
+		 "fedora-release",
+		 "dracut-config-generic", "kernel", "rpm-ostree", "lvm2",
+		 "authconfig",
+		 "btrfs-progs", "e2fsprogs", "xfsprogs",
+		 "grub2", "grub2-efi", "ostree-grub2",
+		 "efibootmgr", "shim",
+		 "gnupg2",
+		 "basesystem",
+		 "bash",
+		 "xz", "gzip", "bzip2",
+		 "coreutils",
+		 "which",
+		 "nfs-utils",
+		 "curl",
+		 "NetworkManager",
+		 "hostname", "initscripts", "iproute", "iputils", "less", "man-db",
+		 "sos",
+		 "openssh-clients", "openssh-server", "passwd", "plymouth",
+		 "policycoreutils", "procps-ng", "rootfiles", "rpm",
+		 "selinux-policy-targeted", "setup", "shadow-utils",
+		 "sudo", "systemd", "util-linux", "vim-minimal",
+		 "tar",
 		 "cloud-init",
 		 "cloud-utils-growpart",
 		 "docker-storage-setup",
@@ -19,6 +45,8 @@
 		 "cockpit",
 		 "kubernetes", "etcd", "cadvisor",
 		 "docker-io"],
+
+    "default_target": "multi-user.target",
 
     "units": ["docker.socket", "cockpit.socket", "docker-storage-setup.service"]
 }

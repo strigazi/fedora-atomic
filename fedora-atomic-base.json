@@ -2,35 +2,4 @@
     "comment": "Base configuration for any trees generated for Fedora using rpm-ostree",
 
     "osname": "fedora-atomic",
-    "ref": "fedora-atomic/rawhide/x86_64/base",
-    
-    "repos": ["fedora-rawhide"],
-
-    "selinux": true,
-
-    "bootstrap_packages": ["filesystem", "glibc", "nss-altfiles", "shadow-utils",
-			   "fedora-release"],
-
-    "packages": ["dracut-config-generic", "kernel", "rpm-ostree", "lvm2",
-		 "authconfig",
-		 "btrfs-progs", "e2fsprogs", "xfsprogs",
-		 "grub2", "grub2-efi", "ostree-grub2",
-		 "efibootmgr", "shim",
-		 "gnupg2",
-		 "basesystem",
-		 "bash",
-		 "xz", "gzip", "bzip2",
-		 "coreutils",
-		 "which",
-                 "nfs-utils",
-		 "curl",
-		 "NetworkManager",
-		 "hostname", "initscripts", "iproute", "iputils", "less", "man-db",
-		 "sos",
-		 "openssh-clients", "openssh-server", "passwd", "plymouth",
-		 "policycoreutils", "procps-ng", "rootfiles", "rpm",
-		 "selinux-policy-targeted", "setup", "shadow-utils",
-		 "sudo", "systemd", "util-linux", "vim-minimal"],
-
-    "default_target": "multi-user.target"
 }
