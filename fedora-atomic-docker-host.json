@@ -7,6 +7,10 @@
 
     "bootstrap_packages": ["filesystem"],
 
+    "install-langs": ["en_US"],
+
+    "postprocess-script": "treecompose-post.sh",
+
     "packages": ["glibc", "nss-altfiles", "shadow-utils",
 		 "fedora-release",
 		 "dracut-config-generic", "kernel", "rpm-ostree", "lvm2",
