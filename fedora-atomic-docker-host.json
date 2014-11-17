@@ -11,6 +11,8 @@
 
     "postprocess-script": "treecompose-post.sh",
 
+    "etc-group-members": ["wheel"],
+
     "packages": ["glibc", "nss-altfiles", "shadow-utils",
 		 "fedora-release",
 		 "dracut-config-generic", "kernel", "rpm-ostree", "lvm2",
