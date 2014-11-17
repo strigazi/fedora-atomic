@@ -1,0 +1,13 @@
+<template>
+    <name>rawhide</name>
+    <os>
+        <name>RHEL-7</name>
+        <version>0</version>
+        <arch>x86_64</arch>
+        <install type='url'>
+            <url>https://dl.fedoraproject.org/pub/alt/fedora-atomic/testing/rawhide/20141104.0/installer/</url>
+        </install>
+        <rootpw>ewwwwwww</rootpw>
+    </os>
+</template>
+
