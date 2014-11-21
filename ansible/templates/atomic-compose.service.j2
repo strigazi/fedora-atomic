@@ -1,0 +1,9 @@
+[Unit]
+Description=Atomic compose for {{ item }}
+
+[Service]
+WorkingDirectory={{ datadir }}/{{ item }}
+ExecStart=/usr/bin/rpm-ostree-toolbox taskrunner {{ inboxdir }}
+
+[Install]
+WantedBy=multi-user.target
