@@ -1,8 +1,8 @@
 [Unit]
-Description=Atomic compose for {{ item }}
+Description=Atomic compose for {{ item.name }}
 
 [Service]
-WorkingDirectory={{ datadir }}/{{ item }}
+WorkingDirectory={{ datadir }}/{{ item.name }}
 ExecStart=/usr/bin/rpm-ostree-toolbox taskrunner {{ inboxdir }}
 
 [Install]

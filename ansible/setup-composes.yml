@@ -1,5 +1,4 @@
-- hosts: walters-f20-atomic-local
-  sudo: yes
+- hosts: all
 
   vars:
     datadir: /srv/fedora-atomic
@@ -25,6 +24,14 @@
     - template: src=templates/atomic-compose.service.j2
                 dest=/etc/systemd/system/atomic-compose-{{ item.name }}.service
                 mode=0644
+      with_items: releases
+
+    - file: path={{ datadir }}/{{ item.name }}/repo src=../output/repo
+            owner=root group=root state=link
+      with_items: releases
+
+    - file: path={{ datadir }}/{{ item.name }}/tasks
+            owner=root group=root mode=755 state=directory
       with_items: releases
 
     - service: name=atomic-compose-{{ item.name }} enabled=yes state=started
