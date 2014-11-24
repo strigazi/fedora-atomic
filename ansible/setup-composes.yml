@@ -30,9 +30,13 @@
             owner=root group=root state=link
       with_items: releases
 
-    - file: path={{ datadir }}/{{ item.name }}/tasks
+    - file: path={{ datadir }}/{{ item.name }}/tasks/treecompose
             owner=root group=root mode=755 state=directory
       with_items: releases
+
+    - name: Create initial treecompose
+      action: copy content="" dest={{ inboxdir }}/treecompose
+              owner=root group=rpmostreecompose mode=644
 
     - service: name=atomic-compose-{{ item.name }} enabled=yes state=started
       with_items: releases

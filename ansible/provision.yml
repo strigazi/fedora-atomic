@@ -24,7 +24,7 @@
         - rpm-ostree-toolbox
 
     - file: path={{ inboxdir }}
-            owner=root group=rpmostreecompose mode=755 state=directory
+            owner=root group=rpmostreecompose mode=775 state=directory
 
     - file: path={{ outputdir }}/repo
             owner=root group=root mode=755 state=directory
