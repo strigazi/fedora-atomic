@@ -5,6 +5,8 @@
 
     "selinux": true,
 
+    "boot_location": "new",
+
     "bootstrap_packages": ["filesystem"],
 
     "install-langs": ["en_US"],
