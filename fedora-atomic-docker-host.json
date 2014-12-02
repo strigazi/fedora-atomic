@@ -50,6 +50,7 @@
 		 "audit",
 		 "cockpit",
 		 "kubernetes", "etcd", "cadvisor",
+		 "flannel",
 		 "docker-io"],
 
     "default_target": "multi-user.target",
