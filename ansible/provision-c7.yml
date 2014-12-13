@@ -30,6 +30,9 @@
         - ostree
         - rpm-ostree
         - rpm-ostree-toolbox
+        - docker
+
+    - service: name=docker.socket enabled=yes state=started
 
     - file: path={{ inboxdir }}
             owner=root group=rpmostreecompose mode=775 state=directory
