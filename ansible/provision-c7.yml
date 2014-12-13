@@ -1,4 +1,5 @@
 - hosts: all
+  sudo: yes
 
   vars:
     datadir: /srv/fedora-atomic
@@ -13,6 +14,11 @@
 
     - yum: name=/root/epel-release.rpm state=present
 
+    - name: add CentOS 7 Virt Testing
+      action: copy src=files/centos-7-virt-testing.repo
+              dest=/etc/yum.repos.d/centos-7-virt-testing.repo
+              owner=root group=root
+
     - name: add CentOS 7 Atomic Testing
       action: copy src=files/centos-7-atomic-testing.repo
               dest=/etc/yum.repos.d/centos-7-atomic-testing.repo
@@ -22,6 +28,7 @@
       with_items:
         - git
         - ostree
+        - rpm-ostree
         - rpm-ostree-toolbox
 
     - file: path={{ inboxdir }}
@@ -33,3 +40,7 @@
     - command: /usr/bin/ostree init --repo={{ outputdir }}/repo --mode=archive-z2
       args:
         creates: "{{ outputdir }}/repo/objects"
+
+    - yum: name={{ item }} state=present
+      with_items:
+        - httpd
