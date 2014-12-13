@@ -1,0 +1,5 @@
+[walters-atomic-host-f22-wip]
+name=Copr repo for atomic-host-f22-wip owned by walters
+baseurl=http://copr-be.cloud.fedoraproject.org/results/walters/atomic-host-f22-wip/fedora-rawhide-$basearch/
+enabled=0
+gpgcheck=0
