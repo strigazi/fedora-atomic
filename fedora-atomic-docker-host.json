@@ -11,7 +11,7 @@
 
     "postprocess-script": "treecompose-post.sh",
 
-    "etc-group-members": ["wheel"],
+    "etc-group-members": ["wheel", "docker"],
 
     "packages": ["glibc", "nss-altfiles", "shadow-utils",
 		 "fedora-release",
