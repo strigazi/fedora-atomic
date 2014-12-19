@@ -1,5 +1,0 @@
-{
-    "comment": "Base configuration for any trees generated for Fedora using rpm-ostree",
-
-    "osname": "fedora-atomic",
-}
