@@ -54,7 +54,8 @@
 		 "cockpit",
 		 "kubernetes", "etcd", "cadvisor",
 		 "flannel",
-		 "docker-io"],
+		 "docker-io",
+		 "python-docker-py"],
 
     "default_target": "multi-user.target",
 
