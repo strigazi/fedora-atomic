@@ -9,6 +9,8 @@
 
     "documentation": false,
 
+    "initramfs-args": ["--no-hostonly"],
+
     "install-langs": ["en_US"],
 
     "postprocess-script": "treecompose-post.sh",
