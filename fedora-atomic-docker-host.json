@@ -58,5 +58,5 @@
 
     "default_target": "multi-user.target",
 
-    "units": ["docker.socket", "cockpit.socket", "docker-storage-setup.service"]
+    "units": ["docker.service", "cockpit.socket", "docker-storage-setup.service"]
 }
