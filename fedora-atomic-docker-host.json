@@ -1,7 +1,7 @@
 {
     "ref": "fedora-atomic/rawhide/x86_64/docker-host",
 
-    "repos": ["fedora-rawhide", "walters-atomic-host-f22-wip"],
+    "repos": ["fedora-rawhide"],
 
     "selinux": true,
 
