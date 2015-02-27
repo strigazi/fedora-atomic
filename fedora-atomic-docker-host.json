@@ -7,6 +7,8 @@
 
     "documentation": false,
 
+    "automatic_version_prefix": "22",
+
     "initramfs-args": ["--no-hostonly"],
 
     "install-langs": ["en_US"],
