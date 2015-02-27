@@ -19,7 +19,9 @@
 
     "packages": ["glibc", "nss-altfiles", "shadow-utils",
 		 "fedora-release",
-		 "dracut-config-generic", "kernel", "rpm-ostree", "lvm2",
+		 "dracut-config-generic", "kernel",
+		 "dracut-network",
+		 "rpm-ostree", "lvm2",
 		 "authconfig",
 		 "btrfs-progs", "e2fsprogs", "xfsprogs",
 		 "grub2", "grub2-efi", "ostree-grub2",
