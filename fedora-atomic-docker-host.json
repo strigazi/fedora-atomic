@@ -5,8 +5,6 @@
 
     "selinux": true,
 
-    "bootstrap_packages": ["filesystem"],
-
     "documentation": false,
 
     "initramfs-args": ["--no-hostonly"],
