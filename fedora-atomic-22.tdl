@@ -5,7 +5,7 @@
         <version>0</version>
         <arch>x86_64</arch>
         <install type='url'>
-            <url>https://dl.fedoraproject.org/pub/alt/fedora-atomic/images/rawhide/20150129.0/installer/</url>
+            <url>https://dl.fedoraproject.org/pub/alt/fedora-atomic/images/f22/20150224.0/installer/</url>
         </install>
         <rootpw>ewwwwwww</rootpw>
     </os>
