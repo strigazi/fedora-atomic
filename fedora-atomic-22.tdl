@@ -2,7 +2,7 @@
     <name>rawhide</name>
     <os>
         <name>Fedora</name>
-        <version>22</version>
+        <version>20</version>
         <arch>x86_64</arch>
         <install type='url'>
             <url>https://dl.fedoraproject.org/pub/alt/fedora-atomic/images/f22/20150302.0/installer/images/</url>
