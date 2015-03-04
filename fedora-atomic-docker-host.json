@@ -1,7 +1,7 @@
 {
     "ref": "fedora-atomic/f22/x86_64/docker-host",
 
-    "repos": ["fedora-22"],
+    "repos": ["fedora-22", "fedora-22-bleed"],
 
     "selinux": true,
 

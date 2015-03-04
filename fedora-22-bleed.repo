@@ -1,0 +1,6 @@
+[fedora-22-bleed]
+name=Fedora rawhide $basearch
+baseurl=https://kojipkgs.fedoraproject.org/mash/bleed/$basearch
+enabled=0
+gpgcheck=0
+metadata_expire=1m
