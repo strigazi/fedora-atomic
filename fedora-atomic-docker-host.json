@@ -1,13 +1,13 @@
 {
-    "ref": "fedora-atomic/f22/x86_64/docker-host",
+    "ref": "fedora-atomic/rawhide/x86_64/docker-host",
 
-    "repos": ["fedora-22", "fedora-22-bleed"],
+    "repos": ["fedora-rawhide"],
 
     "selinux": true,
 
     "documentation": false,
 
-    "automatic_version_prefix": "22",
+    "automatic_version_prefix": "23",
 
     "initramfs-args": ["--no-hostonly"],
 
