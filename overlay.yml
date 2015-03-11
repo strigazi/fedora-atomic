@@ -34,8 +34,6 @@ components:
     # (automatic) distgit: ostree
 
   - src: github:hughsie/libhif
-    # Just testing the freeze functionality
-    freeze: 07fb582c331773ea8ee60513d8ee74f592a7eab9
     distgit: 
       name: libhif
       patches: drop
@@ -46,6 +44,4 @@ components:
       patches: drop
 
   - src: github:docker/docker
-    distgit: 
-      name: docker-io
-      src: file:///home/walters/src/fedora/docker-io
+    distgit: { name: docker-io }
