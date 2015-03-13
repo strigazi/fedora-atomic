@@ -40,6 +40,8 @@
 
     - service: name=docker.service enabled=yes state=started
 
+    - service: name=libvirtd.socket enabled=yes state=started
+
     - file: path={{ inboxdir }}
             owner=root group=rpmostreecompose mode=775 state=directory
 
