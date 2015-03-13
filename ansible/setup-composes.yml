@@ -6,8 +6,8 @@
     outputdir: /srv/fedora-atomic
     inboxdir: /srv/fedora-atomic/inbox
     releases:
-      - name: f21
-        gitbranch: f21
+      - name: f22
+        gitbranch: f22
       - name: rawhide
         gitbranch: master
 
@@ -22,9 +22,10 @@
            update=no
       with_items: releases
 
-    - template: src=templates/atomic-compose.service.j2
-                dest=/etc/systemd/system/atomic-compose-{{ item.name }}.service
-                mode=0644
+    - git: repo=https://git.fedorahosted.org/git/spin-kickstarts.git
+           dest={{ datadir }}/{{ item.name }}/spin-kickstarts
+           version={{ item.gitbranch }}
+           update=no
       with_items: releases
 
     - file: path={{ datadir }}/{{ item.name }}/repo src=../output/repo
@@ -34,13 +35,3 @@
     - file: path={{ datadir }}/{{ item.name }}/tasks/treecompose
             owner=root group=root mode=755 state=directory
       with_items: releases
-
-    - name: Create initial treecompose
-      action: copy content="" dest={{ inboxdir }}/treecompose
-              owner=root group=rpmostreecompose mode=644
-
-    - service: name=atomic-compose-{{ item.name }} enabled=yes state=started
-      with_items: releases
-      
-
-
