@@ -17,6 +17,11 @@
 
     "etc-group-members": ["wheel", "docker"],
 
+    "ignore-removed-users": ["root"],
+    "ignore-removed-groups": ["root"],
+    "check-passwd": { "type": "file", "filename": "passwd" },
+    "check-groups": { "type": "file", "filename": "group" },
+
     "packages": ["glibc", "nss-altfiles", "shadow-utils",
 		 "fedora-release",
 		 "dracut-config-generic", "kernel",
