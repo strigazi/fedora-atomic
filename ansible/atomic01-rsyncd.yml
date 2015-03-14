@@ -2,10 +2,6 @@
   sudo: yes
 
   tasks:
-    - name: Ensure public_content_t label
-      file: path=/srv/fedora-atomic/output setype=public_content_t recurse=yes
-            state=directory
-
     - name: Set up rsync export for fedora-atomic
       action: ini_file
         dest=/etc/rsyncd.conf

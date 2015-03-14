@@ -3,7 +3,7 @@
 
   vars:
     datadir: /srv/fedora-atomic
-    outputdir: /srv/fedora-atomic
+    outputdir: /srv/fedora-atomic/output
     inboxdir: /srv/fedora-atomic/inbox
     releases:
       - name: f22
@@ -29,6 +29,14 @@
       with_items: releases
 
     - file: path={{ datadir }}/{{ item.name }}/repo src=../output/repo
+            owner=root group=root state=link
+      with_items: releases
+
+    - file: path={{ outputdir }}/images/{{ item.name }}
+            owner=root group=root state=directory
+      with_items: releases
+
+    - file: path={{ datadir }}/{{ item.name }}/images src=../output/images/{{ item.name }}
             owner=root group=root state=link
       with_items: releases
 

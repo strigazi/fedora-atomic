@@ -37,20 +37,30 @@
         - rpm-ostree
         - rpm-ostree-toolbox
         - docker
+        - docker-registry
 
     - service: name=docker.service enabled=yes state=started
 
     - service: name=libvirtd.socket enabled=yes state=started
 
-    - file: path={{ inboxdir }}
-            owner=root group=rpmostreecompose mode=775 state=directory
+    - name: Create output directory
+      file: path={{ outputdir }} setype=public_content_t recurse=yes
+            state=directory
 
-    - file: path={{ outputdir }}/repo
+    - name: Create output images dir
+      file: path={{ outputdir }}/images
+            state=directory
+
+    - name: Create output repo dir
+      file: path={{ outputdir }}/repo
             owner=root group=root mode=755 state=directory
 
     - command: /usr/bin/ostree init --repo={{ outputdir }}/repo --mode=archive-z2
       args:
         creates: "{{ outputdir }}/repo/objects"
+
+    - file: path={{ inboxdir }}
+            owner=root group=rpmostreecompose mode=775 state=directory
 
     - yum: name={{ item }} state=present
       with_items:
