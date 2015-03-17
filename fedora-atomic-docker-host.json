@@ -22,7 +22,8 @@
     "check-passwd": { "type": "file", "filename": "passwd" },
     "check-groups": { "type": "file", "filename": "group" },
 
-    "packages": ["glibc", "nss-altfiles", "shadow-utils",
+    "packages": ["atomic",
+		 "glibc", "nss-altfiles", "shadow-utils",
 		 "fedora-release",
 		 "dracut-config-generic", "kernel",
 		 "dracut-network",
