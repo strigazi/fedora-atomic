@@ -9,7 +9,7 @@
 
     "automatic_version_prefix": "22",
 
-    "initramfs-args": ["--no-hostonly"],
+    "initramfs-args": ["--no-hostonly", "--add", "iscsi"],
 
     "install-langs": ["en_US"],
 
@@ -66,6 +66,7 @@
 		 "kubernetes", "etcd",
 		 "flannel",
 		 "docker",
+		 "iscsi-initiator-utils",
 		 "python-docker-py"],
 
     "default_target": "multi-user.target",
