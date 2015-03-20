@@ -1,6 +1,0 @@
-[centos-7-atomic-testing]
-name=CentOS 7 Atomic Testing
-baseurl=http://cbs.centos.org/repos/atomic7-testing/x86_64/os/
-enabled=1
-metadata_expire=1h
-gpgcheck=0
