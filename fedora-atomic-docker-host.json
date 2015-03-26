@@ -63,7 +63,7 @@
 		 "cockpit-shell",
 		 "cockpit-docker",
 		 "cockpit-daemon",
-		 "kubernetes", "etcd", "cadvisor",
+		 "kubernetes", "etcd",
 		 "flannel",
 		 "docker",
 		 "python-docker-py"],
