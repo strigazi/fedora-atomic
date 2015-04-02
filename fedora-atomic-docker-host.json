@@ -62,7 +62,6 @@
 		 "cockpit-bridge",
 		 "cockpit-shell",
 		 "cockpit-docker",
-		 "cockpit-daemon",
 		 "kubernetes", "etcd",
 		 "flannel",
 		 "docker",
