@@ -64,7 +64,6 @@ https://fedorahosted.org/rel-eng/ticket/6119
 - Run rpm-ostree-toolbox by hand
   rpm-ostree-toolbox liveimage -o scratch/pxetolive --tdl fedora-atomic/fedora-atomic-22.tdl -k spin-kickstarts/fedora-cloud-atomic-pxetolive.ks -c fedora-atomic/config.ini  --overwrite
 
-
 - Old style script for running composes
   https://github.com/projectatomic/rpm-ostree-toolbox/tree/master/src/scripts
 
@@ -72,3 +71,7 @@ https://fedorahosted.org/rel-eng/ticket/6119
 
 - New idea: set up jenkins
   - For event driven: respond to fedmsg (git commits and yum repositories)
+
+### Gaps 
+
+- No GPG signing (On either Fedora or CentOS)
