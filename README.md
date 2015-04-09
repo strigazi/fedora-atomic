@@ -37,7 +37,8 @@ http://koji.fedoraproject.org/koji/tasks?state=all&owner=masher&view=flat&method
 
 ### Installer and PXE-to-Live
 
-See http://dl.fedoraproject.org/pub/fedora/linux/atomic/
+https://fedorahosted.org/rel-eng/ticket/6119
+http://dl.fedoraproject.org/pub/fedora/linux/atomic/
 
 
 
