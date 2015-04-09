@@ -38,7 +38,7 @@ a list of Koji tasks can be found here:
 
 http://koji.fedoraproject.org/koji/tasks?state=all&owner=masher&view=flat&method=createImage&order=-id
 
-### Installer and PXE-to-Live
+### Installer
 
 Installer is different for 2 reasons:
  - Embeds content
@@ -49,9 +49,26 @@ Installer is different for 2 reasons:
 
 https://fedorahosted.org/rel-eng/ticket/6119
 
-http://dl.fedoraproject.org/pub/fedora/linux/atomic/
+
+### PXE-to-Live
+
+- dgilmore wanted QA process for gating respins of this
+  (Theoretically similar to cloud image updates)
+- Concern how often to respin
 
 
+### Alt.fedoraproject.org: public mirror space for arbitrary content
+
+- Server atomic01.qa.fedoraproject.org rsyncs to this
+- Managed via ansible: https://github.com/cgwalters/fedora-atomic-infra
+- Run rpm-ostree-toolbox by hand
+  rpm-ostree-toolbox liveimage -o scratch/pxetolive --tdl fedora-atomic/fedora-atomic-22.tdl -k spin-kickstarts/fedora-cloud-atomic-pxetolive.ks -c fedora-atomic/config.ini  --overwrite
 
 
+- Old style script for running composes
+  https://github.com/projectatomic/rpm-ostree-toolbox/tree/master/src/scripts
 
+- Current state: Run by hand
+
+- New idea: set up jenkins
+  - For event driven: respond to fedmsg (git commits and yum repositories)
