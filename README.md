@@ -20,6 +20,9 @@ https://git.fedorahosted.org/cgit/releng/tree/scripts/run-pungi#n48
   - To submit patches https://lists.fedoraproject.org/pipermail/rel-eng/
   - No public log output currently, dgilmore may tell you if it breaks
 
+It makes an OSTree commit from a set of RPM packages, which clients
+then replicate.
+
 This git repository holds the core manifest file
 `fedora-atomic-docker-host.json` that is used for that process.
 
@@ -45,10 +48,9 @@ Installer is different for 2 reasons:
  - Uses different partitioning scheme
    - https://github.com/projectatomic/fedora-productimg-atomic
  - https://git.fedorahosted.org/cgit/spin-kickstarts.git/tree/atomic-installer
- - lorax --nomacboot  -p 'Fedora Atomic' -v 22 -r 22 --source=http://127.0.0.1/repomirror/fedora-22 --add-template /srv/fedora-atomic/spin-kickstarts/atomic-installer/lorax-configure-repo.tmpl --add-template-var=ostree_osname=fedora-atomic  --add-arch-template-var=ostree_repo=http://127.0.0.1/fedora-atomic/repo --add-template-var=ostree_ref=fedora-atomic/f22/x86_64/docker-host --add-arch-template /srv/fedora-atomic/spin-kickstarts/atomic-installer/lorax-embed-repo.tmpl --add-arch-template-var=ostree_osname=fedora-atomic --add-arch-template-var=ostree_ref=fedora-atomic/f22/x86_64/docker-host -i fedora-productimg-atomic /var/tmp/lorax
+ - lorax --nomacboot  -p 'Fedora Atomic' -v 22 -r 22 --source=https://dl.fedoraproject.org/pub/fedora/linux/development/22/x86_64/os/ --add-template /srv/fedora-atomic/spin-kickstarts/atomic-installer/lorax-configure-repo.tmpl --add-template-var=ostree_osname=fedora-atomic  --add-arch-template-var=ostree_repo=https://dl.fedoraproject.org/pub/fedora/linux/atomic/22/ --add-template-var=ostree_ref=fedora-atomic/f22/x86_64/docker-host --add-arch-template /srv/fedora-atomic/spin-kickstarts/atomic-installer/lorax-embed-repo.tmpl --add-arch-template-var=ostree_osname=fedora-atomic --add-arch-template-var=ostree_ref=fedora-atomic/f22/x86_64/docker-host -i fedora-productimg-atomic /var/tmp/lorax
 
-https://fedorahosted.org/rel-eng/ticket/6119
-
+For some information on how this developed, see: https://fedorahosted.org/rel-eng/ticket/6119
 
 ### PXE-to-Live
 
