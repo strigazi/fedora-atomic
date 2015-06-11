@@ -52,7 +52,6 @@
 		 "tar",
 		 "cloud-init",
 		 "cloud-utils-growpart",
-		 "docker-storage-setup",
 		 "rsync",
 		 "bash-completion",
 		 "tmux", "screen",
