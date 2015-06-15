@@ -26,6 +26,16 @@ then replicate.
 This git repository holds the core manifest file
 `fedora-atomic-docker-host.json` that is used for that process.
 
+To run an rpm-ostree compose locally, do something like:
+
+```
+if ! test -d repo; then mkdir -p repo && ostree --repo=repo init --mode=archive-z2; fi
+rpm-ostree compose --repo=repo tree fedora-atomic/fedora-atomic-docker-host.json
+```
+
+Later tools like rpm-ostree-toolbox will consume this OSTree commit,
+placing the content into several image types like an installer, a
+cloud image, a PXE-to-Live image, etc.
 
 ### Cloud images
 
