@@ -44,13 +44,32 @@ http://koji.fedoraproject.org/koji/tasks?state=all&owner=masher&view=flat&method
 ### Installer
 
 Installer is different for 2 reasons:
- - Embeds content
+ - Embeds the OSTree content (unlike mainline, the OS is assembled on the server side)
  - Uses different partitioning scheme
    - https://github.com/projectatomic/fedora-productimg-atomic
- - https://git.fedorahosted.org/cgit/spin-kickstarts.git/tree/atomic-installer
- - lorax --nomacboot  -p 'Fedora Atomic' -v 22 -r 22 --source=https://dl.fedoraproject.org/pub/fedora/linux/development/22/x86_64/os/ --add-template /srv/fedora-atomic/spin-kickstarts/atomic-installer/lorax-configure-repo.tmpl --add-template-var=ostree_osname=fedora-atomic  --add-arch-template-var=ostree_repo=https://dl.fedoraproject.org/pub/fedora/linux/atomic/22/ --add-template-var=ostree_ref=fedora-atomic/f22/x86_64/docker-host --add-arch-template /srv/fedora-atomic/spin-kickstarts/atomic-installer/lorax-embed-repo.tmpl --add-arch-template-var=ostree_osname=fedora-atomic --add-arch-template-var=ostree_ref=fedora-atomic/f22/x86_64/docker-host -i fedora-productimg-atomic /var/tmp/lorax
+
+To build it, you use lorax.  However, lorax presently assumes that host = target (i.e.
+if you want to build a Fedora 22 Anaconda, you need a Fedora 22 host).  You can choose
+to use either `mock` or `docker` (or some other container tool), or VMs of course.
+
+Currently Fedora rel-eng runs lorax inside mock:
+https://pagure.io/releng/blob/master/f/scripts/run-pungi#_62
+
+For Project Atomic we developed rpm-ostree-toolbox which uses Docker/ImageFactory
+to run lower level tools like lorax; it takes a high level config file called
+`config.ini`.
+
+However, for Fedora it is now a bit out of date because it hasn't been updated
+to match how Fedora rel-eng now runs lorax; specifically the config files are duplicated
+with the content in https://git.fedorahosted.org/cgit/spin-kickstarts.git/tree/atomic-installer
 
 For some information on how this developed, see: https://fedorahosted.org/rel-eng/ticket/6119
+
+But, to use it, get a clone of this git repo, then something like:
+
+```
+rpm-ostree-toolbox installer --ostreerepo repo -c fedora-atomic/config.ini -o installer
+```
 
 ### PXE-to-Live
 
