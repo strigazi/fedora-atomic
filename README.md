@@ -106,3 +106,8 @@ rpm-ostree-toolbox installer --ostreerepo repo -c fedora-atomic/config.ini -o in
 ### Gaps 
 
 - No GPG signing (On either Fedora or CentOS)
+
+### Bodhi and updates
+
+- https://lists.projectatomic.io/projectatomic-archives/atomic/2015-June/msg00000.html
+- https://github.com/fedora-infra/fedmsg-atomic-composer
