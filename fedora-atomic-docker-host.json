@@ -34,6 +34,7 @@
 		 "efibootmgr", "shim",
 		 "gnupg2",
 		 "basesystem",
+		 "python",
 		 "bash",
 		 "xz", "gzip", "bzip2",
 		 "coreutils",
