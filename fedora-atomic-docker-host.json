@@ -58,7 +58,7 @@
 		 "bash-completion",
 		 "tmux", "screen",
 		 "strace", "lsof", "tcpdump", "nmap-ncat",
-		 "policycoreutils-python",
+		 "policycoreutils-python-utils",
 		 "setools-console",
 		 "audit",
 		 "cockpit-bridge",
@@ -67,8 +67,7 @@
 		 "kubernetes", "etcd",
 		 "flannel",
 		 "docker",
-		 "iscsi-initiator-utils",
-		 "python-docker-py"],
+		 "iscsi-initiator-utils"],
 
     "default_target": "multi-user.target",
 
