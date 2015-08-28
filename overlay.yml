@@ -24,7 +24,7 @@ distgit:
   branch: master
   
 root:
-  mock: fedora-rawhide-x86_64
+  mock: fedora-23-x86_64
 
 cache:
   buildserial: 0
