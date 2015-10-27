@@ -23,7 +23,7 @@
     "check-groups": { "type": "file", "filename": "group" },
 
     "packages": ["atomic",
-		 "glibc", "nss-altfiles", "shadow-utils",
+		 "glibc", "nss-altfiles", "shadow-utils", "sssd-client",
 		 "fedora-release",
 		 "dracut-config-generic", "kernel",
 		 "dracut-network",
@@ -69,7 +69,8 @@
 		 "flannel",
 		 "docker",
 		 "python-docker-py",
-		 "iscsi-initiator-utils"],
+		 "iscsi-initiator-utils",
+		 "oddjob-mkhomedir"],
 
     "default_target": "multi-user.target",
 
