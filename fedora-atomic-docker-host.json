@@ -68,6 +68,7 @@
 		 "kubernetes", "etcd",
 		 "flannel",
 		 "docker",
+		 "python-docker-py",
 		 "iscsi-initiator-utils"],
 
     "default_target": "multi-user.target",
