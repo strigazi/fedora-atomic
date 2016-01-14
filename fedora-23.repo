@@ -1,7 +1,66 @@
 [fedora-23]
-name=Fedora 23  $basearch
-#baseurl=http://download.fedoraproject.org/pub/fedora/linux//development/23/$basearch/os/
-mirrorlist=https://mirrors.fedoraproject.org/metalink?repo=fedora-23&arch=$basearch
+name=Fedora 23 - $basearch
+failovermethod=priority
+#baseurl=http://download.fedoraproject.org/pub/fedora/linux/releases/23/Everything/$basearch/os/
+metalink=https://mirrors.fedoraproject.org/metalink?repo=fedora-23&arch=$basearch
+enabled=1
+metadata_expire=28d
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-23-$basearch
+skip_if_unavailable=False
+
+[fedora-23-debuginfo]
+name=Fedora 23 - $basearch - Debug
+failovermethod=priority
+#baseurl=http://download.fedoraproject.org/pub/fedora/linux/releases/23/Everything/$basearch/debug/
+metalink=https://mirrors.fedoraproject.org/metalink?repo=fedora-debug-23&arch=$basearch
 enabled=0
-gpgcheck=0
-metadata_expire=1d
+metadata_expire=28d
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-23-$basearch
+skip_if_unavailable=False
+
+[fedora-23-source]
+name=Fedora 23 - Source
+failovermethod=priority
+#baseurl=http://download.fedoraproject.org/pub/fedora/linux/releases/23/Everything/source/SRPMS/
+metalink=https://mirrors.fedoraproject.org/metalink?repo=fedora-source-23&arch=$basearch
+enabled=0
+metadata_expire=28d
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-23-$basearch
+skip_if_unavailable=False
+
+[fedora-23-updates]
+name=Fedora 23 - $basearch - Updates
+failovermethod=priority
+#baseurl=http://download.fedoraproject.org/pub/fedora/linux/updates/23/$basearch/
+metalink=https://mirrors.fedoraproject.org/metalink?repo=updates-released-f23&arch=$basearch
+enabled=1
+gpgcheck=1
+metadata_expire=6h
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-23-$basearch
+skip_if_unavailable=False
+
+[fedora-23-updates-debuginfo]
+name=Fedora 23 - $basearch - Updates - Debug
+failovermethod=priority
+#baseurl=http://download.fedoraproject.org/pub/fedora/linux/updates/23/$basearch/debug/
+metalink=https://mirrors.fedoraproject.org/metalink?repo=updates-released-debug-f23&arch=$basearch
+enabled=0
+gpgcheck=1
+metadata_expire=6h
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-23-$basearch
+skip_if_unavailable=False
+
+[fedora-23-updates-source]
+name=Fedora 23 - Updates Source
+failovermethod=priority
+#baseurl=http://download.fedoraproject.org/pub/fedora/linux/updates/23/SRPMS/
+metalink=https://mirrors.fedoraproject.org/metalink?repo=updates-released-source-f23&arch=$basearch
+enabled=0
+gpgcheck=1
+metadata_expire=6h
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-23-$basearch
+skip_if_unavailable=False
+

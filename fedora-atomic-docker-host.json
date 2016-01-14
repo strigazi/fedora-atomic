@@ -1,7 +1,7 @@
 {
     "ref": "fedora-atomic/f23/x86_64/docker-host",
 
-    "repos": ["fedora-23"],
+    "repos": ["fedora-23", "fedora-23-updates"],
 
     "selinux": true,
 
