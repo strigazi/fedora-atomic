@@ -16,7 +16,9 @@ The `fedora-atomic-docker-host.json` file is the core manifest
 defining what goes into the host (ostree) content.
 
 The `rpm-ostree` tool is invoked inside Fedora rel-eng; see:
-https://git.fedorahosted.org/cgit/releng/tree/scripts/run-pungi#n48 
+
+https://pagure.io/releng
+
   - To submit patches https://lists.fedoraproject.org/pipermail/rel-eng/
   - No public log output currently, dgilmore may tell you if it breaks
 
