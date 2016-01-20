@@ -15,15 +15,20 @@ https://fedoraproject.org/wiki/Changes/AtomicHost
 The `fedora-atomic-docker-host.json` file is the core manifest
 defining what goes into the host (ostree) content.
 
-The `rpm-ostree` tool is invoked inside Fedora rel-eng; see:
+The `rpm-ostree` tool is invoked in two places inside Fedora infrastructure.
+
+First, the release OSTree commits (used to generate pre-release trees) are
+created by:
 
 https://pagure.io/releng
 
-  - To submit patches https://lists.fedoraproject.org/pipermail/rel-eng/
-  - No public log output currently, dgilmore may tell you if it breaks
+The updates trees are generated inside bodhi:
 
-It makes an OSTree commit from a set of RPM packages, which clients
-then replicate.
+https://github.com/fedora-infra/bodhi/blob/d54c77b94f8a2ca5924ada9eb2a085d7f8e2cb8a/bodhi/consumers/masher.py#L351
+https://github.com/fedora-infra/fedmsg-atomic-composer
+
+In both case, rpm-ostree makes an OSTree commit from a set of RPM
+packages, which clients then replicate.
 
 This git repository holds the core manifest file
 `fedora-atomic-docker-host.json` that is used for that process.
