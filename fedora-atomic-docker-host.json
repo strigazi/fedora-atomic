@@ -23,7 +23,8 @@
     "check-groups": { "type": "file", "filename": "group" },
 
     "packages": ["atomic",
-		 "glibc", "nss-altfiles", "shadow-utils", "sssd-client",
+		 "glibc", "nss-altfiles", "shadow-utils",
+		 "sssd-client", "libsss_sudo",
 		 "fedora-release",
 		 "dracut-config-generic", "kernel",
 		 "dracut-network",
