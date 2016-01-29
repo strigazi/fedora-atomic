@@ -74,7 +74,8 @@
 		 "docker",
 		 "python-docker-py",
 		 "iscsi-initiator-utils",
-		 "oddjob-mkhomedir"],
+		 "oddjob-mkhomedir",
+		 "atomic-devmode"],
 
     "default_target": "multi-user.target",
 
