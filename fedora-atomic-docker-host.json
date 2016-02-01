@@ -30,6 +30,7 @@
 		 "dracut-network",
 		 "dracut-live",
 		 "rpm-ostree", "lvm2",
+		 "cryptsetup",
 		 "authconfig",
 		 "btrfs-progs", "e2fsprogs", "xfsprogs",
 		 "grub2", "grub2-efi", "ostree-grub2",
