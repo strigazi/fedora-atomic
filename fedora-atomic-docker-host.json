@@ -75,7 +75,8 @@
 		 "python-docker-py",
 		 "iscsi-initiator-utils",
 		 "oddjob-mkhomedir",
-		 "atomic-devmode"],
+		 "atomic-devmode",
+		 "runc"],
 
     "default_target": "multi-user.target",
 
