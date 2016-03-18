@@ -1,0 +1,65 @@
+[fedora-24]
+name=Fedora 24 - $basearch
+failovermethod=priority
+#baseurl=http://download.fedoraproject.org/pub/fedora/linux/releases/24/Everything/$basearch/os/
+metalink=https://mirrors.fedoraproject.org/metalink?repo=fedora-24&arch=$basearch
+enabled=1
+metadata_expire=28d
+gpgcheck=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-24-$basearch
+skip_if_unavailable=False
+
+[fedora-24-debuginfo]
+name=Fedora 24 - $basearch - Debug
+failovermethod=priority
+#baseurl=http://download.fedoraproject.org/pub/fedora/linux/releases/24/Everything/$basearch/debug/
+metalink=https://mirrors.fedoraproject.org/metalink?repo=fedora-debug-24&arch=$basearch
+enabled=0
+metadata_expire=28d
+gpgcheck=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-24-$basearch
+skip_if_unavailable=False
+
+[fedora-24-source]
+name=Fedora 24 - Source
+failovermethod=priority
+#baseurl=http://download.fedoraproject.org/pub/fedora/linux/releases/24/Everything/source/SRPMS/
+metalink=https://mirrors.fedoraproject.org/metalink?repo=fedora-source-24&arch=$basearch
+enabled=0
+metadata_expire=28d
+gpgcheck=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-24-$basearch
+skip_if_unavailable=False
+
+[fedora-24-updates]
+name=Fedora 24 - $basearch - Updates
+failovermethod=priority
+#baseurl=http://download.fedoraproject.org/pub/fedora/linux/updates/24/$basearch/
+metalink=https://mirrors.fedoraproject.org/metalink?repo=updates-released-f24&arch=$basearch
+enabled=1
+gpgcheck=0
+metadata_expire=6h
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-24-$basearch
+skip_if_unavailable=False
+
+[fedora-24-updates-debuginfo]
+name=Fedora 24 - $basearch - Updates - Debug
+failovermethod=priority
+#baseurl=http://download.fedoraproject.org/pub/fedora/linux/updates/24/$basearch/debug/
+metalink=https://mirrors.fedoraproject.org/metalink?repo=updates-released-debug-f24&arch=$basearch
+enabled=0
+gpgcheck=0
+metadata_expire=6h
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-24-$basearch
+skip_if_unavailable=False
+
+[fedora-24-updates-source]
+name=Fedora 24 - Updates Source
+failovermethod=priority
+#baseurl=http://download.fedoraproject.org/pub/fedora/linux/updates/24/SRPMS/
+metalink=https://mirrors.fedoraproject.org/metalink?repo=updates-released-source-f24&arch=$basearch
+enabled=0
+gpgcheck=0
+metadata_expire=6h
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-24-$basearch
+skip_if_unavailable=False
