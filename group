@@ -42,6 +42,7 @@ kube:x:994:
 sshd:x:74:
 chrony:x:992:
 tcpdump:x:72:
+ceph:x:167:
 input:x:995:
 systemd-timesync:x:991:
 systemd-network:x:990:
