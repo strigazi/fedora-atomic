@@ -25,7 +25,7 @@
     "packages": ["atomic",
 		 "glibc", "nss-altfiles", "shadow-utils",
 		 "sssd-client", "libsss_sudo",
-		 "fedora-release",
+		 "fedora-release-atomichost",
 		 "dracut-config-generic", "kernel",
 		 "dracut-network",
 		 "dracut-live",
