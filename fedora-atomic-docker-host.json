@@ -78,6 +78,8 @@
 		 "ceph-common",
 		 "oddjob-mkhomedir",
 		 "atomic-devmode",
+                 "oci-register-machine",
+                 "oci-systemd-hook",
 		 "runc"],
 
     "default_target": "multi-user.target",
