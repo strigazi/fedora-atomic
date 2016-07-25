@@ -1,13 +1,13 @@
 {
-    "ref": "fedora-atomic/24/x86_64/docker-host",
+    "ref": "fedora-atomic/25/x86_64/docker-host",
 
-    "repos": ["fedora-24"],
+    "repos": ["fedora-25"],
 
     "selinux": true,
 
     "documentation": false,
 
-    "automatic_version_prefix": "24",
+    "automatic_version_prefix": "25",
 
     "initramfs-args": ["--no-hostonly", "--add", "iscsi"],
 
