@@ -8,6 +8,7 @@
     "documentation": false,
 
     "automatic_version_prefix": "25",
+    "mutate-os-release": "25",
 
     "initramfs-args": ["--no-hostonly", "--add", "iscsi"],
 
