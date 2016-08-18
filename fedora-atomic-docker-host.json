@@ -81,6 +81,7 @@
 		 "atomic-devmode",
 		 "oci-register-machine",
 		 "oci-systemd-hook",
+		 "mdadm",
 		 "runc"],
 
     "default_target": "multi-user.target",
