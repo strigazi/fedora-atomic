@@ -28,7 +28,6 @@
 		 "fedora-release",
 		 "dracut-config-generic", "kernel",
 		 "dracut-network",
-		 "dracut-live",
 		 "rpm-ostree", "lvm2",
 		 "cryptsetup",
 		 "authconfig",
