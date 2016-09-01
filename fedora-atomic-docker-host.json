@@ -31,6 +31,7 @@
 		 "dracut-network",
 		 "dracut-live",
 		 "rpm-ostree", "lvm2",
+		 "chrony",
 		 "cryptsetup",
 		 "authconfig",
 		 "btrfs-progs", "e2fsprogs", "xfsprogs",
@@ -82,5 +83,5 @@
 
     "default_target": "multi-user.target",
 
-    "units": ["docker.service", "cockpit.socket", "docker-storage-setup.service", "systemd-timesyncd.service"]
+    "units": ["docker.service", "cockpit.socket", "docker-storage-setup.service"]
 }
