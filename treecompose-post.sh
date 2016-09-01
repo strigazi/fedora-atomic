@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 
-set -e
+set -xeuo pipefail
+
+# Work around https://bugzilla.redhat.com/show_bug.cgi?id=1265295
+echo 'Storage=persistent' >> /etc/systemd/journald.conf
 
 # See: https://bugzilla.redhat.com/show_bug.cgi?id=1051816
 KEEPLANG=en_US
