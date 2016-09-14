@@ -9,5 +9,5 @@ echo 'Storage=persistent' >> /etc/systemd/journald.conf
 KEEPLANG=en_US
 find /usr/share/locale -mindepth  1 -maxdepth 1 -type d -not -name "${KEEPLANG}" -exec rm -rf {} +
 localedef --list-archive | grep -a -v ^"${KEEPLANG}" | xargs localedef --delete-from-archive
-mv -f /usr/lib/locale/locale-archive /usr/lib/locale/locale-archive.tmpl
+cp -f /usr/lib/locale/locale-archive /usr/lib/locale/locale-archive.tmpl
 build-locale-archive
