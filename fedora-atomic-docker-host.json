@@ -78,7 +78,8 @@
 		 "oci-register-machine",
 		 "oci-systemd-hook",
 		 "mdadm",
-		 "runc"],
+		 "runc",
+		 "dracut-fips"],
 
     "default_target": "multi-user.target",
 
