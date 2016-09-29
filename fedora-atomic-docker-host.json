@@ -1,5 +1,5 @@
 {
-    "ref": "fedora-atomic/rawhide/x86_64/docker-host",
+    "ref": "fedora-atomic/rawhide/${basearch}/docker-host",
 
     "repos": ["fedora-rawhide"],
 
