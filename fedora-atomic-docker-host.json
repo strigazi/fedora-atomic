@@ -45,7 +45,7 @@
 		 "which",
 		 "nfs-utils",
 		 "curl",
-		 "iptables-services",
+		 "iptables-services", "iptables",
 		 "NetworkManager",
 		 "hostname", "initscripts", "iproute", "iputils", "less",
 		 "sos",
