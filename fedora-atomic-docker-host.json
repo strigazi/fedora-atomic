@@ -1,5 +1,5 @@
 {
-    "ref": "fedora-atomic/25/x86_64/docker-host",
+    "ref": "fedora-atomic/25/${basearch}/docker-host",
 
     "repos": ["fedora-25"],
 
