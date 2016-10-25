@@ -86,7 +86,7 @@
 
     "packages-ppc64le": ["grub2", "ostree-grub2", "atomic-devmode"],
 
-    "packages-x86_64": ["grub", "grub2-efi", "ostree-grub2",
+    "packages-x86_64": ["grub2", "grub2-efi", "ostree-grub2",
                          "efibootmgr", "shim", "atomic-devmode"],
 
     "default_target": "multi-user.target",
