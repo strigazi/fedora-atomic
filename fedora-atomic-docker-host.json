@@ -1,7 +1,7 @@
 {
     "ref": "fedora-atomic/25/${basearch}/docker-host",
 
-    "repos": ["fedora-25"],
+    "repos": ["fedora-25", "kubernetes"],
 
     "selinux": true,
 
@@ -24,6 +24,8 @@
     "check-groups": { "type": "file", "filename": "group" },
 
     "packages": ["atomic",
+		 "kubelet", "kubectl", "kubeadm",
+		 "etcd", "flannel",
 		 "glibc", "nss-altfiles", "shadow-utils",
 		 "sssd-client", "libsss_sudo",
 		 "fedora-release-atomichost",
