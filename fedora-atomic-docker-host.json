@@ -75,7 +75,8 @@
 		 "oci-register-machine",
 		 "oci-systemd-hook",
 		 "mdadm",
-		 "runc"],
+		 "runc",
+		 "kubernetes", "etcd", "flannel"],
 
     "packages-aarch64": ["grub2-efi", "ostree-grub2",
                          "efibootmgr", "shim", "atomic-devmode"],
