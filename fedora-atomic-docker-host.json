@@ -1,7 +1,7 @@
 {
     "ref": "fedora-atomic/f23/x86_64/docker-host",
 
-    "repos": ["fedora-23", "fedora-23-updates"],
+    "repos": ["cernvm", "docker-cvmfs", "local-testing", "fedora-23", "fedora-23-updates"],
 
     "selinux": true,
 
@@ -75,7 +75,8 @@
 		 "python-docker-py",
 		 "iscsi-initiator-utils",
 		 "oddjob-mkhomedir",
-		 "atomic-devmode"],
+		 "atomic-devmode",
+		 "cvmfs", "docker-volume-cvmfs", "cvmfs-mount-point"],
 
     "default_target": "multi-user.target",
 
