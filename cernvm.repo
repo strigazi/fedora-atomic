@@ -1,0 +1,6 @@
+[cernvm]
+name=CernVM packages
+baseurl=http://rbritoda.web.cern.ch/rbritoda/cvmfs/
+gpgcheck=0
+enabled=1
+protect=1

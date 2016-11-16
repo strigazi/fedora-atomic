@@ -1,7 +1,7 @@
 {
     "ref": "fedora-atomic/24/x86_64/docker-host",
 
-    "repos": ["fedora-24"],
+    "repos": ["mykuberepo", "cernvm", "docker-cvmfs", "local-testing", "fedora-24"],
 
     "selinux": true,
 
@@ -82,7 +82,8 @@
 		 "oci-register-machine",
 		 "oci-systemd-hook",
 		 "mdadm",
-		 "runc"],
+		 "runc",
+		 "cvmfs", "docker-volume-cvmfs", "cvmfs-mount-point"],
 
     "default_target": "multi-user.target",
 

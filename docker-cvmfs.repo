@@ -1,0 +1,6 @@
+[docker-cvmfs]
+name=Cloud Utils repository
+baseurl=http://linuxsoft.cern.ch/internal/repos/cci7-utils-stable/x86_64/os/
+enabled=1
+gpgcheck=0
+priority=5

@@ -1,0 +1,6 @@
+[local-testing]
+name=ostree local-testing
+baseurl=file:///srv/local-repo/
+enabled=1
+gpgcheck=0
+metadata_expire=1d
